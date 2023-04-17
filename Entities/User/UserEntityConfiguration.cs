@@ -1,21 +1,23 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KwiatkiBeatkiAPI.Entities.User
 {
-    public class UserEntityConfiguration : EntityTypeConfiguration<UserEntity>
+    public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
     {
-        public UserEntityConfiguration()
+        public void Configure(EntityTypeBuilder<UserEntity> builder)
         {
-            ToTable("User");
 
-            Property(p => p.Email)
-                .IsRequired()
-                .HasMaxLength(50);
-            Property(p => p.FirstName)
-                .IsRequired()
-                .HasMaxLength(50);
-            Property(p => p.LastName)
-                .HasMaxLength(50);
+            builder.ToTable("User");
+
+            builder.Property(p => p.Email)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            builder.Property(p => p.FirstName)
+                    .IsRequired()
+                    .HasMaxLength(50);
+            builder.Property(p => p.LastName)
+                    .HasMaxLength(50);
         }
     }
 }

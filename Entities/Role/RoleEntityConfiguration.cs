@@ -1,16 +1,18 @@
-﻿using System.Data.Entity.ModelConfiguration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace KwiatkiBeatkiAPI.Entities.Role
 {
-    public class RoleEntityConfiguration : EntityTypeConfiguration<RoleEntity>
+    public class RoleEntityConfiguration : IEntityTypeConfiguration<RoleEntity>
     {
-        public RoleEntityConfiguration()
+        public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
-            ToTable("Role");
 
-            Property(p => p.Name)
-                .IsRequired()
-                .HasMaxLength(30);
+            builder
+                .ToTable("Role")
+                .Property(p => p.Name)
+                    .IsRequired()
+                    .HasMaxLength(30);
         }
     }
 }

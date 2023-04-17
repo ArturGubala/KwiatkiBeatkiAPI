@@ -1,4 +1,10 @@
+using KwiatkiBeatkiAPI.Models.Settings;
+
 var builder = WebApplication.CreateBuilder(args);
+
+var databaseInfo = new DatabaseInfo();
+builder.Configuration.GetSection("DatabaseInfo").Bind(databaseInfo);
+builder.Services.AddSingleton(databaseInfo);
 
 // Add services to the container.
 

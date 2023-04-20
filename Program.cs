@@ -1,5 +1,6 @@
 using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.User;
+using KwiatkiBeatkiAPI.Middleware;
 using KwiatkiBeatkiAPI.Models.Settings;
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Identity;
@@ -19,6 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<KwiatkiBeatkiDbContext>();
 builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
 
 var app = builder.Build();
 
@@ -26,17 +28,13 @@ var scope = app.Services.CreateScope();
 var seeder = scope.ServiceProvider.GetRequiredService<ISeederService>();
 seeder.Seed();
 
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ErrorHandlingMiddleware>();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
+app.UseHttpsRedirection();
 app.MapControllers();
-
 app.Run();

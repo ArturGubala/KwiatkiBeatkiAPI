@@ -9,6 +9,7 @@ using NLog.Extensions.Logging;
 using KwiatkiBeatkiAPI.Models;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Reflection;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();
@@ -23,7 +24,6 @@ var config = new ConfigurationBuilder()
    .SetBasePath(Directory.GetCurrentDirectory())
    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
    .Build();
-
 LogManager.Configuration = new NLogLoggingConfiguration(config.GetSection("NLog"));
 
 builder.Services.AddAuthentication(option =>
@@ -52,6 +52,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<KwiatkiBeatkiDbContext>();
 builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IAuthService, AuthorizeService>();
+builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
 var app = builder.Build();
 

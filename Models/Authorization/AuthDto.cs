@@ -1,8 +1,12 @@
-﻿namespace KwiatkiBeatkiAPI.Models.Authorization
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace KwiatkiBeatkiAPI.Models.Authorization
 {
     public class AuthDto
     {
-        public string email { get; set; }
-        public string password { get; set; }
+        [Required]
+        public string Email { get; set; }
+        [Required]
+        public string Password { get; set; }
     }
 }

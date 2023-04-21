@@ -6,33 +6,36 @@ using KwiatkiBeatkiAPI.Models.Authorization;
 using KwiatkiBeatkiAPI.Models.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IAuthService
     {
         UserDto Login(AuthDto authDto);
-        void SaveRefreshTokenData(AuthDto authDto, TokenDto tokenDto);
+        void SaveRefreshTokenData(UserDto userDto, TokenDto tokenDto);
+        UserDto CheckTokens(TokenDto tokenDto);
     }
     public class AuthorizeService : IAuthService
     {
         private readonly KwiatkiBeatkiDbContext _kwiatkiBeatkiDbContext;
         private readonly IPasswordHasher<UserEntity> _passwordHasher;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
 
-        public AuthorizeService(KwiatkiBeatkiDbContext kwiatkiBeatkiDbContext, IPasswordHasher<UserEntity> passwordHasher, IMapper mapper)
+        public AuthorizeService(KwiatkiBeatkiDbContext kwiatkiBeatkiDbContext, IPasswordHasher<UserEntity> passwordHasher, 
+                                IMapper mapper, ITokenService tokenService)
         {
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _passwordHasher = passwordHasher;
             _mapper = mapper;
-
+            _tokenService = tokenService;
         }
         public UserDto Login(AuthDto authDto)
         {
             var user = _kwiatkiBeatkiDbContext.User
                 .Include(u => u.Role)
                 .FirstOrDefault(u => u.Email == authDto.Email);
-
             if (user == null)
                 throw new BadRequestException("Invalid username or password");
 
@@ -45,17 +48,38 @@ namespace KwiatkiBeatkiAPI.Services
             return userDto;
         }
 
-        public void SaveRefreshTokenData(AuthDto authDto, TokenDto tokenDto)
+        public UserDto CheckTokens(TokenDto tokenDto)
         {
+            string? accessToken = tokenDto.AccessToken;
+            string? refreshToken = tokenDto.RefreshToken;
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
+
+            var userId = int.Parse(principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
             var user = _kwiatkiBeatkiDbContext.User
-                .FirstOrDefault(u => u.Email == authDto.Email);
+                .Include(u => u.Role)
+                .FirstOrDefault(u => u.Id == userId);
+            if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+                throw new BadRequestException("Invalid client request");
+
+            UserDto userDto = _mapper.Map<UserDto>(user);
+
+            return userDto;
+        }
+
+        public void SaveRefreshTokenData(UserDto userDto, TokenDto tokenDto)
+        {
+            var user = _kwiatkiBeatkiDbContext.User.SingleOrDefault(u => u.Id == userDto.Id);
+
             if (user == null)
                 throw new BadRequestException("Invalid user name of password");
 
             user.RefreshToken = tokenDto.RefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(2);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5);
 
             _kwiatkiBeatkiDbContext.SaveChanges();
         }
+
+
     }
 }

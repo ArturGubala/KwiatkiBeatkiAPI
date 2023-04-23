@@ -1,5 +1,4 @@
 ﻿using KwiatkiBeatkiAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers

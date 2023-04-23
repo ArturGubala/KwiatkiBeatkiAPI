@@ -72,10 +72,10 @@ namespace KwiatkiBeatkiAPI.Services
             var user = _kwiatkiBeatkiDbContext.User.SingleOrDefault(u => u.Id == userDto.Id);
 
             if (user == null)
-                throw new BadRequestException("Invalid user name of password");
+                throw new BadRequestException("Invalid client request");
 
             user.RefreshToken = tokenDto.RefreshToken;
-            user.RefreshTokenExpiryTime = DateTime.Now.AddMinutes(5);
+            user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
             _kwiatkiBeatkiDbContext.SaveChanges();
         }

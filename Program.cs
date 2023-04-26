@@ -8,15 +8,15 @@ using NLog;
 using NLog.Extensions.Logging;
 using KwiatkiBeatkiAPI.Models;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using System.Text;
 using System.Reflection;
+using Microsoft.EntityFrameworkCore;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.GetSection("DatabaseInfo").Bind(databaseInfo);
-builder.Services.AddSingleton(databaseInfo);
 builder.Configuration.GetSection("Autentication").Bind(autenticationSettings);
 builder.Services.AddSingleton(autenticationSettings);
 
@@ -49,7 +49,6 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<KwiatkiBeatkiDbContext>();
 builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntity>>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddTransient<ITokenService, TokenService>();
@@ -58,6 +57,8 @@ builder.Services.AddTransient<IItemService, ItemService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddDbContext<KwiatkiBeatkiDbContext>
+    (options => options.UseSqlServer(builder.Configuration.GetConnectionString("KwiatkiBeatkiDbConnection")));
 
 var app = builder.Build();
 
@@ -73,6 +74,11 @@ if (app.Environment.IsDevelopment())
 }
 app.UseAuthentication();
 app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "KwiatkiBeatki API");
+});
 app.UseRouting();
 app.UseAuthorization();
 app.MapControllers();

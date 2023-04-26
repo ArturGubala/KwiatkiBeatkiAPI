@@ -2,6 +2,7 @@
 using KwiatkiBeatkiAPI.Entities.Role;
 using KwiatkiBeatkiAPI.Entities.User;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -24,6 +25,10 @@ namespace KwiatkiBeatkiAPI.Services
         {
             if (!_kwiatkiBeatkiDbContext.Database.CanConnect())
                 return;
+
+            var pendingMigrations = _kwiatkiBeatkiDbContext.Database.GetPendingMigrations();
+            if (pendingMigrations != null && pendingMigrations.Any())
+                _kwiatkiBeatkiDbContext.Database.Migrate();
 
             if (!_kwiatkiBeatkiDbContext.Role.Any())
             {

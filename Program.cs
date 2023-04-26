@@ -53,7 +53,7 @@ builder.Services.AddScoped<IPasswordHasher<UserEntity>, PasswordHasher<UserEntit
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAuthService, AuthorizeService>();
-builder.Services.AddTransient<IItemService, ItemService>();
+builder.Services.AddTransient<IItemsService, ItemsService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();

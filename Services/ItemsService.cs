@@ -2,14 +2,14 @@
 
 namespace KwiatkiBeatkiAPI.Services
 {
-    public interface IItemService
+    public interface IItemsService
     {
         string SayHello();
     }
-    public class ItemService : IItemService
+    public class ItemsService : IItemsService
     {
         private readonly IUserContextService _userContextService;
-        public ItemService(IUserContextService userContextService)
+        public ItemsService(IUserContextService userContextService)
         {
             _userContextService = userContextService;
         }

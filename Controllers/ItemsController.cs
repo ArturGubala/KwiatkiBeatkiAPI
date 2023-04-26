@@ -7,12 +7,12 @@ namespace KwiatkiBeatkiAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class ItemController : ControllerBase
+    public class ItemsController : ControllerBase
     {
-        private readonly IItemService _itemService;
-        public ItemController(IItemService itemService)
+        private readonly IItemsService _itemService;
+        public ItemsController(IItemsService itemsService)
         {
-            _itemService = itemService;
+            _itemService = itemsService;
         }
 
         [HttpGet]

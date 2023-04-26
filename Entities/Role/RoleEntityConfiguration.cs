@@ -7,7 +7,6 @@ namespace KwiatkiBeatkiAPI.Entities.Role
     {
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
-
             builder
                 .ToTable("Role")
                 .Property(p => p.Name)

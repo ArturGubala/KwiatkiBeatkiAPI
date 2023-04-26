@@ -1,8 +1,13 @@
 ﻿using KwiatkiBeatkiAPI.DatabaseContext;
+using KwiatkiBeatkiAPI.Entities.BulkPack;
+using KwiatkiBeatkiAPI.Entities.ItemType;
+using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
+using KwiatkiBeatkiAPI.Entities.Producer;
 using KwiatkiBeatkiAPI.Entities.Role;
 using KwiatkiBeatkiAPI.Entities.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Xml.Linq;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -41,6 +46,34 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var users = GetUsers();
                 _kwiatkiBeatkiDbContext.User.AddRange(users);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.MeasurementUnit.Any())
+            {
+                var measurementUnits = GetMeasurementUnits();
+                _kwiatkiBeatkiDbContext.MeasurementUnit.AddRange(measurementUnits);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.ItemType.Any())
+            {
+                var itemTypes = GetItemTypes();
+                _kwiatkiBeatkiDbContext.ItemType.AddRange(itemTypes);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.BulkPack.Any())
+            {
+                var bulkPacks = GetBulkPacks();
+                _kwiatkiBeatkiDbContext.BulkPack.AddRange(bulkPacks);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Producer.Any())
+            {
+                var producers = GetProducers();
+                _kwiatkiBeatkiDbContext.Producer.AddRange(producers);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -106,6 +139,86 @@ namespace KwiatkiBeatkiAPI.Services
 
             return users;
         }
-        
+
+        private IEnumerable<MeasurementUnitEntity> GetMeasurementUnits()
+        {
+            var measurementUnits = new List<MeasurementUnitEntity>()
+            {
+                new MeasurementUnitEntity()
+                {
+                    Name = "kilogram",
+                    Abbreviation = "kg"
+                }
+            };
+
+            return measurementUnits;
+        }
+
+        private IEnumerable<ItemTypeEntity> GetItemTypes()
+        {
+            var itemTypes = new List<ItemTypeEntity>()
+            {
+                new ItemTypeEntity()
+                {
+                    Name = "wkład",
+                },
+                new ItemTypeEntity()
+                {
+                    Name = "znicz"
+                },
+                new ItemTypeEntity()
+                {
+                    Name = "wkład elektryczny"
+                }
+            };
+
+            return itemTypes;
+        }
+
+        private IEnumerable<BulkPackEntity> GetBulkPacks()
+        {
+            var bulkPacks = new List<BulkPackEntity>()
+            {
+                new BulkPackEntity()
+                {
+                    Name = "zgrzewka",
+                    Abbreviation = "zg"
+                },
+                new BulkPackEntity()
+                {
+                    Name = "karton",
+                    Abbreviation = "kart"
+                }
+            };
+
+            return bulkPacks;
+        }
+
+        private IEnumerable<ProducerEntity> GetProducers() 
+        {
+            var producers = new List<ProducerEntity>()
+            {
+                new ProducerEntity()
+                {
+                    Name = "Admar",
+                    PhoneNumber = "447234964",
+                    Email = "admarmz@wp.pl",
+                    Website = "https://www.zniczeadmar.pl"
+                },
+                new ProducerEntity()
+                {
+                    Name = "Płomyk",
+                    PhoneNumber = "627414579",
+                    Email = "pph-plomyk@pph-plomyk.pl",
+                    Website = "https://www.pph-plomyk.pl"
+                },
+                new ProducerEntity()
+                {
+                    Name = "Ignis"
+                },
+            };
+
+            return producers;
+        }
     }
 }

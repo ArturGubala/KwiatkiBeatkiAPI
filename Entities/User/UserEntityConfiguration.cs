@@ -11,13 +11,12 @@ namespace KwiatkiBeatkiAPI.Entities.User
             builder.ToTable("User");
 
             builder.Property(p => p.Email)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                .IsRequired()
+                .HasMaxLength(50);
             builder.Property(p => p.FirstName)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                .HasMaxLength(50);
             builder.Property(p => p.LastName)
-                    .HasMaxLength(50);
+                .HasMaxLength(50);
         }
     }
 }

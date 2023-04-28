@@ -7,15 +7,14 @@ namespace KwiatkiBeatkiAPI.Entities.BulkPack
     {
         public void Configure(EntityTypeBuilder<BulkPackEntity> builder)
         {
-            builder
-                .ToTable("BulkPack");
+            builder.ToTable("BulkPack");
 
             builder.Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                .IsRequired()
+                .HasMaxLength(50);
             builder.Property(p => p.Abbreviation)
-                    .IsRequired()
-                    .HasMaxLength(10);
+                .IsRequired()
+                .HasMaxLength(10);
         }
     }
 }

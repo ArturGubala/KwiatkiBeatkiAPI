@@ -7,11 +7,11 @@ namespace KwiatkiBeatkiAPI.Entities.Role
     {
         public void Configure(EntityTypeBuilder<RoleEntity> builder)
         {
-            builder
-                .ToTable("Role")
-                .Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(30);
+            builder.ToTable("Role");
+
+            builder.Property(p => p.Name)
+                .IsRequired()
+                .HasMaxLength(30);
         }
     }
 }

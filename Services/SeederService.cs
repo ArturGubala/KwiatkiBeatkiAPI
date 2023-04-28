@@ -1,13 +1,14 @@
 ﻿using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.BulkPack;
+using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.ItemType;
 using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
 using KwiatkiBeatkiAPI.Entities.Producer;
+using KwiatkiBeatkiAPI.Entities.Property;
 using KwiatkiBeatkiAPI.Entities.Role;
 using KwiatkiBeatkiAPI.Entities.User;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System.Xml.Linq;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -74,6 +75,20 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var producers = GetProducers();
                 _kwiatkiBeatkiDbContext.Producer.AddRange(producers);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Property.Any())
+            {
+                var properties = GetProperties();
+                _kwiatkiBeatkiDbContext.Property.AddRange(properties);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Item.Any())
+            {
+                var items = GetItems();
+                _kwiatkiBeatkiDbContext.Item.AddRange(items);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -148,6 +163,11 @@ namespace KwiatkiBeatkiAPI.Services
                 {
                     Name = "kilogram",
                     Abbreviation = "kg"
+                },
+                new MeasurementUnitEntity()
+                {
+                    Name = "sztuki",
+                    Abbreviation = "szt"
                 }
             };
 
@@ -216,9 +236,129 @@ namespace KwiatkiBeatkiAPI.Services
                 {
                     Name = "Ignis"
                 },
+                new ProducerEntity()
+                {
+                    Name = "Assai",
+                    PhoneNumber = "Assai",
+                    Email = "handlowy@assai.com.pl",
+                    Website = "https://subito.pl/"
+                }
             };
 
             return producers;
+        }
+
+        private IEnumerable<PropertyEntity> GetProperties()
+        {
+            var properties = new List<PropertyEntity>()
+            {
+                new PropertyEntity()
+                {
+                    Name = "Wysokość"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Szerokość"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Średnica"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Czas palenia"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Rodzaj wypełnienia"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Zasilanie"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość w opakowaniu"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość na warstwie palety"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość na palecie"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość opakowań na warstwie palety"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość opakowań na palecie"
+                },
+            };
+
+            return properties;
+        }
+
+        private IEnumerable<ItemEntity> GetItems()
+        {
+            var items = new List<ItemEntity>()
+            {
+                new ItemEntity()
+                {
+                    ItemTypeId = 1,
+                    BulkPackId = 1,
+                    ProducerId = 3,
+                    MeasurementUnitId = 2,
+                    StockCode = "PROMYK 2",
+                },
+                new ItemEntity()
+                {
+                    ItemTypeId = 2,
+                    BulkPackId = 1,
+                    ProducerId = 3,
+                    MeasurementUnitId = 2,
+                    StockCode = "ZP 37 BP",
+                    Alias = "Serce lane średnie"
+                },
+                new ItemEntity()
+                {
+                    ItemTypeId = 2,
+                    BulkPackId = 1,
+                    ProducerId = 3,
+                    MeasurementUnitId = 2,
+                    StockCode = "ZP 22A",
+                    Alias = "Kapcerek"
+
+                },
+                new ItemEntity()
+                {
+                    ItemTypeId = 1,
+                    BulkPackId = 1,
+                    ProducerId = 1,
+                    MeasurementUnitId = 2,
+                    StockCode = "FUEGO 2",
+                },
+                new ItemEntity()
+                {
+                    ItemTypeId = 2,
+                    BulkPackId = 2,
+                    ProducerId = 3,
+                    MeasurementUnitId = 2,
+                    StockCode = "GLASS ART TRAPEZ 3",
+                },
+                new ItemEntity()
+                {
+                    ItemTypeId = 3,
+                    BulkPackId = 1,
+                    ProducerId = 4,
+                    MeasurementUnitId = 2,
+                    StockCode = "SUBITO S1",
+                },
+            };
+
+            return items;
         }
     }
 }

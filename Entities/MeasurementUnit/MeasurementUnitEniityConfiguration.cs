@@ -7,15 +7,14 @@ namespace KwiatkiBeatkiAPI.Entities.MeasurementUnit
     {
         public void Configure(EntityTypeBuilder<MeasurementUnitEntity> builder)
         {
-            builder
-                .ToTable("MeasurementUnit");
+            builder.ToTable("MeasurementUnit");
 
             builder.Property(p => p.Name)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                .IsRequired()
+                .HasMaxLength(50);
             builder.Property(p => p.Abbreviation)
-                     .IsRequired()
-                     .HasMaxLength(5);
+                .IsRequired()
+                .HasMaxLength(5);
         }
     }
 }

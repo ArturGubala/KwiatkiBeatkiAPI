@@ -1,6 +1,7 @@
 ﻿using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.BulkPack;
 using KwiatkiBeatkiAPI.Entities.Item;
+using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Entities.ItemType;
 using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
 using KwiatkiBeatkiAPI.Entities.Producer;
@@ -89,6 +90,13 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var items = GetItems();
                 _kwiatkiBeatkiDbContext.Item.AddRange(items);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.ItemProperty.Any())
+            {
+                var itemProperties = GetItemProperties();
+                _kwiatkiBeatkiDbContext.ItemProperty.AddRange(itemProperties);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -202,12 +210,17 @@ namespace KwiatkiBeatkiAPI.Services
                 new BulkPackEntity()
                 {
                     Name = "zgrzewka",
-                    Abbreviation = "zg"
+                    Abbreviation = "zg."
                 },
                 new BulkPackEntity()
                 {
                     Name = "karton",
-                    Abbreviation = "kart"
+                    Abbreviation = "kart."
+                },
+                new BulkPackEntity()
+                {
+                    Name = "display",
+                    Abbreviation = "dspl."
                 }
             };
 
@@ -254,19 +267,19 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 new PropertyEntity()
                 {
-                    Name = "Wysokość"
+                    Name = "Wysokość (cm)"
                 },
                 new PropertyEntity()
                 {
-                    Name = "Szerokość"
+                    Name = "Szerokość (cm)"
                 },
                 new PropertyEntity()
                 {
-                    Name = "Średnica"
+                    Name = "Średnica (cm)"
                 },
                 new PropertyEntity()
                 {
-                    Name = "Czas palenia"
+                    Name = "Czas palenia (h)"
                 },
                 new PropertyEntity()
                 {
@@ -278,15 +291,15 @@ namespace KwiatkiBeatkiAPI.Services
                 },
                 new PropertyEntity()
                 {
-                    Name = "Ilość w opakowaniu"
+                    Name = "Ilość szt. w opakowaniu jednostkowym"
                 },
                 new PropertyEntity()
                 {
-                    Name = "Ilość na warstwie palety"
+                    Name = "Ilość szt. na warstwie palety"
                 },
                 new PropertyEntity()
                 {
-                    Name = "Ilość na palecie"
+                    Name = "Ilość szt. na palecie"
                 },
                 new PropertyEntity()
                 {
@@ -295,6 +308,10 @@ namespace KwiatkiBeatkiAPI.Services
                 new PropertyEntity()
                 {
                     Name = "Ilość opakowań na palecie"
+                },
+                new PropertyEntity()
+                {
+                    Name = "Ilość szt. w opakowaniu zbiorczym"
                 },
             };
 
@@ -351,10 +368,157 @@ namespace KwiatkiBeatkiAPI.Services
                 new ItemEntity()
                 {
                     ItemTypeId = 3,
-                    BulkPackId = 1,
+                    BulkPackId = 3,
                     ProducerId = 4,
                     MeasurementUnitId = 2,
                     StockCode = "SUBITO S1",
+                },
+            };
+
+            return items;
+        }
+
+        private IEnumerable<ItemPropertyEntity> GetItemProperties()
+        {
+            var items = new List<ItemPropertyEntity>()
+            {
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 1,
+                    Value = "14"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 3,
+                    Value = "5.5"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 4,
+                    Value = "50"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 7,
+                    Value = "15"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 8,
+                    Value = "240"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 1,
+                    PropertyId = 10,
+                    Value = "16"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 2,
+                    PropertyId = 7,
+                    Value = "12"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 2,
+                    PropertyId = 8,
+                    Value = "96"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 2,
+                    PropertyId = 10,
+                    Value = "8"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 3,
+                    PropertyId = 7,
+                    Value = "16"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 3,
+                    PropertyId = 8,
+                    Value = "128"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 3,
+                    PropertyId = 10,
+                    Value = "8"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 4,
+                    PropertyId = 1,
+                    Value = "12"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 4,
+                    PropertyId = 3,
+                    Value = "5.5"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 4,
+                    PropertyId = 4,
+                    Value = "50"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 4,
+                    PropertyId = 7,
+                    Value = "34"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 5,
+                    PropertyId = 7,
+                    Value = "6"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 1,
+                    Value = "10.8"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 3,
+                    Value = "4.6"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 4,
+                    Value = "1200"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 6,
+                    Value = "2x R6 (AA)"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 7,
+                    Value = "12"
+                },
+                new ItemPropertyEntity()
+                {
+                    ItemId = 6,
+                    PropertyId = 12,
+                    Value = "192"
                 },
             };
 

@@ -1,4 +1,5 @@
 ﻿using KwiatkiBeatkiAPI.Entities.BulkPack;
+using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Entities.ItemType;
 using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
 using KwiatkiBeatkiAPI.Entities.Producer;
@@ -20,5 +21,6 @@ namespace KwiatkiBeatkiAPI.Entities.Item
         public virtual BulkPackEntity? BulkPack { get; set; }
         public virtual ProducerEntity? Producer { get; set; }
         public virtual MeasurementUnitEntity MeasurementUnit { get; set; }
+        public virtual IEnumerable<ItemPropertyEntity> ItemProperties { get; set; }
     }
 }

@@ -18,7 +18,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok(_itemService.SayHello());
+            var items = _itemService.GetAll();
+            return Ok(items);
         } 
     }
 }

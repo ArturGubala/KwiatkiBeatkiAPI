@@ -40,7 +40,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("BulkPack");
+                    b.ToTable("BulkPack", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Item.ItemEntity", b =>
@@ -86,7 +86,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasIndex("ProducerId");
 
-                    b.ToTable("Item");
+                    b.ToTable("Item", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.ItemProperty.ItemPropertyEntity", b =>
@@ -116,7 +116,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasIndex("PropertyId");
 
-                    b.ToTable("ItemProperty");
+                    b.ToTable("ItemProperty", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.ItemType.ItemTypeEntity", b =>
@@ -133,7 +133,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ItemType");
+                    b.ToTable("ItemType", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.MeasurementUnit.MeasurementUnitEntity", b =>
@@ -154,7 +154,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("MeasurementUnit");
+                    b.ToTable("MeasurementUnit", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Producer.ProducerEntity", b =>
@@ -180,7 +180,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Producer");
+                    b.ToTable("Producer", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Property.PropertyEntity", b =>
@@ -197,7 +197,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Property");
+                    b.ToTable("Property", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Role.RoleEntity", b =>
@@ -214,7 +214,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Role");
+                    b.ToTable("Role", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.User.UserEntity", b =>
@@ -253,7 +253,7 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("User");
+                    b.ToTable("User", (string)null);
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Item.ItemEntity", b =>

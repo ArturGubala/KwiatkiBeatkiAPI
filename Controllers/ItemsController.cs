@@ -20,6 +20,13 @@ namespace KwiatkiBeatkiAPI.Controllers
         {
             var items = _itemService.GetAll();
             return Ok(items);
-        } 
+        }
+
+        [HttpGet("{id:int}")]
+        public IActionResult Get(int id)
+        {
+            var item = _itemService.GetById(id);
+            return Ok(item);
+        }
     }
 }

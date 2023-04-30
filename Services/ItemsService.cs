@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using KwiatkiBeatkiAPI.DatabaseContext;
+using KwiatkiBeatkiAPI.Exeptions;
 using KwiatkiBeatkiAPI.Models.Item;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -9,6 +10,7 @@ namespace KwiatkiBeatkiAPI.Services
     public interface IItemsService
     {
         IEnumerable<ItemDto> GetAll();
+        ItemDto GetById(int id);
     }
     public class ItemsService : IItemsService
     {
@@ -33,6 +35,25 @@ namespace KwiatkiBeatkiAPI.Services
                 .ToList();
 
             var itemDto = _mapper.Map<IEnumerable<ItemDto>>(itemEntities);
+
+            return itemDto;
+        }
+
+        public ItemDto GetById(int id)
+        {
+            var itemEntity = _kwiatkiBeatkiDbContext.Item
+                .Include(i => i.ItemType)
+                .Include(i => i.BulkPack)
+                .Include(i => i.MeasurementUnit)
+                .Include(i => i.Producer)
+                .Include(i => i.ItemProperties)
+                    .ThenInclude(x => x.Property)
+                .FirstOrDefault(i => i.Id == id);
+
+            if (itemEntity is null)
+                throw new NotFoundException("Item not found");
+
+            var itemDto = _mapper.Map<ItemDto>(itemEntity);
 
             return itemDto;
         }

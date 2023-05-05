@@ -12,6 +12,12 @@ using System;
 using System.Text;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation;
+using KwiatkiBeatkiAPI.Models.Item;
+using KwiatkiBeatkiAPI.Validators;
+using FluentValidation.AspNetCore;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();
@@ -46,6 +52,8 @@ builder.Services.AddAuthentication(option =>
 // Add services to the container.
 builder.Services.AddTransient<ISeederService, SeederService>();
 builder.Services.AddControllers();
+builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+builder.Services.AddFluentValidationRulesToSwagger();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -58,6 +66,9 @@ builder.Services.AddTransient<IUsersService, UsersService>();
 builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddScoped<IUserContextService, UserContextService>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddScoped<IValidator<CreateItemDto>, CreateItemDtoValidator>();
+builder.Services.AddScoped<IValidator<UpdateItemDto>, UpdateItemDtoValidator>();
 builder.Services.AddDbContext<KwiatkiBeatkiDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("KwiatkiBeatkiDbConnection")));
 

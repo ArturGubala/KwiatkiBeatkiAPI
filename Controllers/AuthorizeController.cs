@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/authorize")]
     [ApiController]
     public class AuthorizeController : ControllerBase
     {

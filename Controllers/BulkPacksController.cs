@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/bulk-packs")]
     [ApiController]
     [Authorize]
     public class BulkPacksController : ControllerBase

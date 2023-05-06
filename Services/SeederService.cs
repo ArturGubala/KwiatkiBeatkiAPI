@@ -1,5 +1,6 @@
 ﻿using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.BulkPack;
+using KwiatkiBeatkiAPI.Entities.DocumentType;
 using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Entities.ItemType;
@@ -8,6 +9,7 @@ using KwiatkiBeatkiAPI.Entities.Producer;
 using KwiatkiBeatkiAPI.Entities.Property;
 using KwiatkiBeatkiAPI.Entities.Role;
 using KwiatkiBeatkiAPI.Entities.User;
+using KwiatkiBeatkiAPI.Entities.Warehouse;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -97,6 +99,20 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var itemProperties = GetItemProperties();
                 _kwiatkiBeatkiDbContext.ItemProperty.AddRange(itemProperties);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Warehouse.Any())
+            {
+                var warehouses = GetWarehouseEntities();
+                _kwiatkiBeatkiDbContext.Warehouse.AddRange(warehouses);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.DocumentType.Any())
+            {
+                var documentTypes = GetDocumentTypes();
+                _kwiatkiBeatkiDbContext.DocumentType.AddRange(documentTypes);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -523,6 +539,54 @@ namespace KwiatkiBeatkiAPI.Services
             };
 
             return items;
+        }
+
+        private IEnumerable<WarehouseEntity> GetWarehouseEntities()
+        {
+            var warehouses = new List<WarehouseEntity>()
+            { 
+                new WarehouseEntity() 
+                {
+                    Name = "Sklep Kwiatki Beatki",
+                    Code = "SKB"
+                },
+                new WarehouseEntity()
+                {
+                    Name = "Stoisko Dębowa Bus",
+                    Code = "SDB"
+                },
+                new WarehouseEntity()
+                {
+                    Name = "Stoisko Dębowa Przyczepa",
+                    Code = "SDP"
+                },
+                new WarehouseEntity()
+                {
+                    Name = "Stoisko Limanowskiego Paulina",
+                    Code = "SLP"
+                }
+            };
+
+            return warehouses;
+        }
+
+        private IEnumerable<DocumentTypeEntity> GetDocumentTypes()
+        {
+            var documentTypes = new List<DocumentTypeEntity>()
+            {
+                new DocumentTypeEntity()
+                {
+                    Name = "Zamówienie do dostawcy",
+                    Abbreviation = "ZAMDOST"
+                },
+                new DocumentTypeEntity()
+                {
+                    Name = "Przesunięcie między magazynowe",
+                    Abbreviation = "MM"
+                }
+            };
+
+            return documentTypes;
         }
     }
 }

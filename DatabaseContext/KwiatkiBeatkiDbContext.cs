@@ -10,6 +10,9 @@ using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.Warehouse;
 using KwiatkiBeatkiAPI.Entities.DocumentType;
+using KwiatkiBeatkiAPI.Entities.TradePartner;
+using KwiatkiBeatkiAPI.Entities.Line;
+using KwiatkiBeatkiAPI.Entities.Document;
 
 namespace KwiatkiBeatkiAPI.DatabaseContext
 {
@@ -26,6 +29,9 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
         public DbSet<ItemEntity> Item { get; set; }
         public DbSet<WarehouseEntity> Warehouse { get; set; }
         public DbSet<DocumentTypeEntity> DocumentType { get; set; }
+        public DbSet<TradePartnerEntity> TradePartner { get; set; }
+        public DbSet<LineEntity> Line { get; set; }
+        public DbSet<DocumentEntity> Document { get; set; }
 
         public KwiatkiBeatkiDbContext(DbContextOptions<KwiatkiBeatkiDbContext> options) : base (options)
         {
@@ -44,6 +50,9 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
             modelBuilder.Entity<ItemEntity>();
             modelBuilder.Entity<WarehouseEntity>();
             modelBuilder.Entity<DocumentTypeEntity>();
+            modelBuilder.Entity<TradePartnerEntity>();
+            modelBuilder.Entity<LineEntity>();
+            modelBuilder.Entity<DocumentEntity>();
         }
     }
 }

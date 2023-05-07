@@ -8,6 +8,7 @@ using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
 using KwiatkiBeatkiAPI.Entities.Producer;
 using KwiatkiBeatkiAPI.Entities.Property;
 using KwiatkiBeatkiAPI.Entities.Role;
+using KwiatkiBeatkiAPI.Entities.TradePartner;
 using KwiatkiBeatkiAPI.Entities.User;
 using KwiatkiBeatkiAPI.Entities.Warehouse;
 using Microsoft.AspNetCore.Identity;
@@ -113,6 +114,13 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var documentTypes = GetDocumentTypes();
                 _kwiatkiBeatkiDbContext.DocumentType.AddRange(documentTypes);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.TradePartner.Any())
+            {
+                var tradePartners = GetTradePartners();
+                _kwiatkiBeatkiDbContext.TradePartner.AddRange(tradePartners);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -587,6 +595,26 @@ namespace KwiatkiBeatkiAPI.Services
             };
 
             return documentTypes;
+        }
+
+        private IEnumerable<TradePartnerEntity> GetTradePartners()
+        {
+            var tradePartners = new List<TradePartnerEntity>()
+            {
+                new TradePartnerEntity()
+                {
+                    Name = "Hurtownia Zniczy i Świec Płomyk",
+                    Email = "kkhajduk@op.pl",
+                    PhoneNumber = "607077661",
+                    Website = "https://znicze.radom.pl",
+                    Street = "Lubelska",
+                    StreetNumber = "65",
+                    City = "Radom",
+                    PostalCode = "26600",
+                }
+            };
+
+            return tradePartners;
         }
     }
 }

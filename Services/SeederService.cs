@@ -1,9 +1,11 @@
 ﻿using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.BulkPack;
+using KwiatkiBeatkiAPI.Entities.Document;
 using KwiatkiBeatkiAPI.Entities.DocumentType;
 using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Entities.ItemType;
+using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Entities.MeasurementUnit;
 using KwiatkiBeatkiAPI.Entities.Producer;
 using KwiatkiBeatkiAPI.Entities.Property;
@@ -121,6 +123,20 @@ namespace KwiatkiBeatkiAPI.Services
             {
                 var tradePartners = GetTradePartners();
                 _kwiatkiBeatkiDbContext.TradePartner.AddRange(tradePartners);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Document.Any())
+            {
+                var documents = GetDocuments();
+                _kwiatkiBeatkiDbContext.Document.AddRange(documents);
+                _kwiatkiBeatkiDbContext.SaveChanges();
+            }
+
+            if (!_kwiatkiBeatkiDbContext.Line.Any())
+            {
+                var lines = GetLines();
+                _kwiatkiBeatkiDbContext.Line.AddRange(lines);
                 _kwiatkiBeatkiDbContext.SaveChanges();
             }
         }
@@ -615,6 +631,119 @@ namespace KwiatkiBeatkiAPI.Services
             };
 
             return tradePartners;
+        }
+
+        private IEnumerable<DocumentEntity> GetDocuments()
+        {
+            var documents = new List<DocumentEntity>()
+            {
+                new DocumentEntity()
+                {
+                    DocumentTypeId = 1,
+                    UserId = 1,
+                    WarehouseFromId = null,
+                    WarehouseToId = null,
+                    TradePartnerId = 1,
+                    FullDocumentNumber = "01/ZAMDOST/05/2023",
+                    DocumentNumber = 1,
+                    Remarks = "Przykładowe uwagi do dokumentu. Mieści się tu dużo znaków, aż czysta hm 300."
+                },
+                new DocumentEntity()
+                {
+                    DocumentTypeId = 1,
+                    UserId = 2,
+                    WarehouseFromId = null,
+                    WarehouseToId = null,
+                    TradePartnerId = 1,
+                    FullDocumentNumber = "02/ZAMDOST/05/2023",
+                    DocumentNumber = 2,
+                    Remarks = ""
+                },
+                new DocumentEntity()
+                {
+                    DocumentTypeId = 2,
+                    UserId = 3,
+                    WarehouseFromId = 1,
+                    WarehouseToId = 4,
+                    TradePartnerId = null,
+                    FullDocumentNumber = "01/MM/05/2023",
+                    DocumentNumber = 1,
+                    Remarks = ""
+                },
+                new DocumentEntity()
+                {
+                    DocumentTypeId = 2,
+                    UserId = 2,
+                    WarehouseFromId = 2,
+                    WarehouseToId = 3,
+                    TradePartnerId = null,
+                    FullDocumentNumber = "02/MM/05/2023",
+                    DocumentNumber = 2,
+                    Remarks = "Uwagi do dokumentu MM. Następnym razem proszę trochę szybciej!"
+                }
+            };
+
+            return documents;
+        }
+
+        private IEnumerable<LineEntity> GetLines()
+        {
+            var lines = new List<LineEntity>()
+            {
+                new LineEntity()
+                {
+                    DocumentId = 1,
+                    ItemId = 1,
+                    Quantity = 720,
+                    Remarks = "Poproszę na osobnej palecie"
+                },
+                new LineEntity()
+                {
+                    DocumentId = 1,
+                    ItemId = 2,
+                    Quantity = 48
+                },
+                new LineEntity()
+                {
+                    DocumentId = 2,
+                    ItemId = 2,
+                    Quantity = 96
+                },
+                new LineEntity()
+                {
+                    DocumentId = 2,
+                    ItemId = 3,
+                    Quantity = 128
+                },
+                new LineEntity()
+                {
+                    DocumentId = 2,
+                    ItemId = 5,
+                    Quantity = 18,
+                    Remarks = "Po kartonie z kolorów: złoty, srebny i reflex"
+                },
+                new LineEntity()
+                {
+                    DocumentId = 3,
+                    ItemId = 1,
+                    Quantity = 120,
+                },
+                new LineEntity()
+                {
+                    DocumentId = 3,
+                    ItemId = 5,
+                    Quantity = 68,
+                },
+                new LineEntity()
+                {
+                    DocumentId = 4,
+                    ItemId = 6,
+                    Quantity = 36,
+                    Remarks = "Po displayu z kolorów: biały, czerwony, żółty"
+                },
+            };
+
+            return lines;
         }
     }
 }

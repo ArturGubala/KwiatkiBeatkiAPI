@@ -15,6 +15,20 @@ namespace KwiatkiBeatkiAPI.Controllers
         {
             _documentsService = documentsService;
         }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            var documentDtos = _documentsService.GetAll();
+            return Ok(documentDtos);
+        }
+
+        [HttpGet("{id:int}")]
+        public IActionResult Get([FromRoute] int id) 
+        { 
+            var documentDto = _documentsService.GetById(id);
+            return Ok(documentDto);
+        }
         
         [HttpPost]
         public IActionResult Post([FromBody] CreateDocumentDto createDocumentDto)

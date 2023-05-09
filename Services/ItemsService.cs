@@ -38,9 +38,9 @@ namespace KwiatkiBeatkiAPI.Services
                     .ThenInclude(p => p.Property)
                 .ToList();
 
-            var itemDto = _mapper.Map<IEnumerable<ItemDto>>(itemEntities);
+            var itemDtos = _mapper.Map<IEnumerable<ItemDto>>(itemEntities);
 
-            return itemDto;
+            return itemDtos;
         }
 
         public ItemDto GetById(int id)

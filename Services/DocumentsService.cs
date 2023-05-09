@@ -4,11 +4,17 @@ using KwiatkiBeatkiAPI.Entities.Document;
 using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Models.Document;
 using KwiatkiBeatkiAPI.Exeptions;
+using Microsoft.EntityFrameworkCore;
+using KwiatkiBeatkiAPI.Entities.Item;
+using KwiatkiBeatkiAPI.Models.Item;
+using System.Reflection.Metadata;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IDocumentsService
     {
+        IEnumerable<DocumentDto> GetAll();
+        DocumentDto GetById(int documentId);
         int CreateDocument(CreateDocumentDto createDocumentDto);
     }
     public class DocumentsService : IDocumentsService
@@ -22,6 +28,47 @@ namespace KwiatkiBeatkiAPI.Services
             _mapper = mapper;
             _userContextService = userContextService;
         }
+        public IEnumerable<DocumentDto> GetAll()
+        {
+            var documentEntities = _kwiatkiBeatkiDbContext.Document
+                .Include(i => i.DocumentType)
+                .Include(i => i.WarehouseFrom)
+                .Include(i => i.WarehouseTo)
+                .Include(i => i.TradePartner)
+                .Include(i => i.User)
+                    .ThenInclude(i => i.Role)
+                .Include(i => i.Lines)
+                    .ThenInclude(i => i.Item)
+                        .ThenInclude(i => i.MeasurementUnit)
+                .ToList();
+
+            var documentDtos = _mapper.Map<IEnumerable<DocumentDto>>(documentEntities);
+
+            return documentDtos;
+        }
+
+        public DocumentDto GetById(int documentId)
+        {
+            var documentEntity = _kwiatkiBeatkiDbContext.Document
+                .Include(i => i.DocumentType)
+                .Include(i => i.WarehouseFrom)
+                .Include(i => i.WarehouseTo)
+                .Include(i => i.TradePartner)
+                .Include(i => i.User)
+                    .ThenInclude(i => i.Role)
+                .Include(i => i.Lines)
+                    .ThenInclude(i => i.Item)
+                        .ThenInclude(i => i.MeasurementUnit)
+                .FirstOrDefault(d => d.Id == documentId);
+
+            if (documentEntity is null)
+                throw new NotFoundException("Document not found");
+
+            var documentDto = _mapper.Map<DocumentDto>(documentEntity);
+
+            return documentDto;
+        }
+
         public int CreateDocument(CreateDocumentDto createDocumentDto)
         {
             var documentEntity = PrepareDocumentEntity(createDocumentDto);
@@ -49,6 +96,21 @@ namespace KwiatkiBeatkiAPI.Services
 
             return documentEntity.Id;
         }
+        private DocumentEntity PrepareDocumentEntity(CreateDocumentDto createDocumentDto)
+        {
+            var documentEntity = _mapper.Map<DocumentEntity>(createDocumentDto);
+            var lastDocumentNumber = GetLastDocumentNumber(createDocumentDto.DocumentTypeId);
+            var documentTypeAbbreviation = GetDocumentTypeAbbreviation(createDocumentDto.DocumentTypeId);
+            var currentDocumentNumber = lastDocumentNumber + 1;
+            var currentFullDocumentNumber = $"{currentDocumentNumber:D2}/{documentTypeAbbreviation}/{documentEntity.Created.ToString("MM")}/{documentEntity.Created.Year}";
+
+            documentEntity.DocumentNumber = currentDocumentNumber;
+            documentEntity.FullDocumentNumber = currentFullDocumentNumber;
+            documentEntity.UserId = (int)_userContextService.UserId;
+
+            return documentEntity;
+        }
+
         private int GetLastDocumentNumber(int documentTypeId)
         {
             var currentDateTime = DateTime.Now;
@@ -68,19 +130,6 @@ namespace KwiatkiBeatkiAPI.Services
             return documentTypeAbbreviation;
         }
 
-        private DocumentEntity PrepareDocumentEntity(CreateDocumentDto createDocumentDto)
-        {
-            var documentEntity = _mapper.Map<DocumentEntity>(createDocumentDto);
-            var lastDocumentNumber = GetLastDocumentNumber(createDocumentDto.DocumentTypeId);
-            var documentTypeAbbreviation = GetDocumentTypeAbbreviation(createDocumentDto.DocumentTypeId);
-            var currentDocumentNumber = lastDocumentNumber + 1;
-            var currentFullDocumentNumber = $"{currentDocumentNumber.ToString("##")}/{documentTypeAbbreviation}/{documentEntity.Created.ToString("MM")}/{documentEntity.Created.Year}";
 
-            documentEntity.DocumentNumber = currentDocumentNumber;
-            documentEntity.FullDocumentNumber = currentFullDocumentNumber;
-            documentEntity.UserId = (int)_userContextService.UserId;
-
-            return documentEntity;
-        }
     }
 }

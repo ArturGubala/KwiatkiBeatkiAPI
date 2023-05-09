@@ -18,6 +18,8 @@ namespace KwiatkiBeatkiAPI.Entities.Document
                 .HasMaxLength(50);
             builder.Property(p => p.DocumentNumber)
                 .IsRequired();
+            builder.Property(p => p.Remarks)
+                .HasMaxLength(300);
         }
     }
 }

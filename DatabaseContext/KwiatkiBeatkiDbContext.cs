@@ -48,7 +48,16 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
             modelBuilder.Entity<PropertyEntity>();
             modelBuilder.Entity<ItemPropertyEntity>();
             modelBuilder.Entity<ItemEntity>();
-            modelBuilder.Entity<WarehouseEntity>();
+            modelBuilder.Entity<WarehouseEntity>()
+                .HasMany(w => w.WarehousesFrom)
+                .WithOne(d => d.WarehouseFrom)
+                .HasForeignKey("WarehouseFromId")
+                .IsRequired(false);
+            modelBuilder.Entity<WarehouseEntity>()
+                .HasMany(w => w.WarehousesTo)
+                .WithOne(d => d.WarehouseTo)
+                .HasForeignKey("WarehouseToId")
+                .IsRequired(false);
             modelBuilder.Entity<DocumentTypeEntity>();
             modelBuilder.Entity<TradePartnerEntity>();
             modelBuilder.Entity<LineEntity>();

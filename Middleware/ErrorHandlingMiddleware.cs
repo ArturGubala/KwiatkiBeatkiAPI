@@ -19,6 +19,8 @@ namespace KwiatkiBeatkiAPI.Middleware
             catch (BadRequestException badRequestException)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                if (badRequestException.InnerException != null)
+                    _logger.LogError(badRequestException.InnerException.ToString(), badRequestException.InnerException.Message);
                 await context.Response.WriteAsync(badRequestException.Message);
             }
             catch (NotFoundException notFoundException)

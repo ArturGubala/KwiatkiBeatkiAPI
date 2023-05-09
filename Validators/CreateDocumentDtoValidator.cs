@@ -50,6 +50,10 @@ namespace KwiatkiBeatkiAPI.Validators
                             context.AddFailure("Nie znaleziono magazynu w bazie");
                     }
                 });
+
+            RuleFor(d => d.Lines)
+                .NotEmpty()
+                .NotNull();
         }
     }
 }

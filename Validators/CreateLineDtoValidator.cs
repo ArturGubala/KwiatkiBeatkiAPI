@@ -17,6 +17,10 @@ namespace KwiatkiBeatkiAPI.Validators
                     if (!itemExists)
                         context.AddFailure("Nie znaleziono kartoteki w bazie");
                 });
+
+            RuleFor(d => d.Quantity)
+                .NotEmpty()
+                .NotNull();
         }
     }
 }

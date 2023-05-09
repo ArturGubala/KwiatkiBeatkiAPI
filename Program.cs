@@ -18,6 +18,7 @@ using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using KwiatkiBeatkiAPI.Models.Document;
+using KwiatkiBeatkiAPI.Models.Line;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();
@@ -75,6 +76,7 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 builder.Services.AddScoped<IValidator<CreateItemDto>, CreateItemDtoValidator>();
 builder.Services.AddScoped<IValidator<UpdateItemDto>, UpdateItemDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateDocumentDto>, CreateDocumentDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateLineDto>, CreateLineDtoValidator>();
 builder.Services.AddDbContext<KwiatkiBeatkiDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("KwiatkiBeatkiDbConnection")));
 

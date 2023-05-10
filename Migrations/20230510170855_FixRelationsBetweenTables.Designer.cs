@@ -4,6 +4,7 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KwiatkiBeatkiAPI.Migrations
 {
     [DbContext(typeof(KwiatkiBeatkiDbContext))]
-    partial class KwiatkiBeatkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510170855_FixRelationsBetweenTables")]
+    partial class FixRelationsBetweenTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -504,9 +506,9 @@ namespace KwiatkiBeatkiAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Property.PropertyEntity", "Property")
-                        .WithMany("ItemProperties")
+                        .WithMany()
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Item");
@@ -579,11 +581,6 @@ namespace KwiatkiBeatkiAPI.Migrations
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Producer.ProducerEntity", b =>
                 {
                     b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Property.PropertyEntity", b =>
-                {
-                    b.Navigation("ItemProperties");
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Role.RoleEntity", b =>

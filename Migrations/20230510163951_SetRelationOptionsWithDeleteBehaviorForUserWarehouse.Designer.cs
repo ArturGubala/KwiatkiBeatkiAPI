@@ -4,6 +4,7 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KwiatkiBeatkiAPI.Migrations
 {
     [DbContext(typeof(KwiatkiBeatkiDbContext))]
-    partial class KwiatkiBeatkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510163951_SetRelationOptionsWithDeleteBehaviorForUserWarehouse")]
+    partial class SetRelationOptionsWithDeleteBehaviorForUserWarehouse
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -425,15 +427,14 @@ namespace KwiatkiBeatkiAPI.Migrations
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Document.DocumentEntity", b =>
                 {
                     b.HasOne("KwiatkiBeatkiAPI.Entities.DocumentType.DocumentTypeEntity", "DocumentType")
-                        .WithMany("Documents")
+                        .WithMany()
                         .HasForeignKey("DocumentTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.TradePartner.TradePartnerEntity", "TradePartner")
-                        .WithMany("Documents")
-                        .HasForeignKey("TradePartnerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("TradePartnerId");
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.User.UserEntity", "User")
                         .WithMany("Documents")
@@ -442,12 +443,12 @@ namespace KwiatkiBeatkiAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Warehouse.WarehouseEntity", "WarehouseFrom")
-                        .WithMany("DocsWithWarehousesFrom")
+                        .WithMany("WarehousesFrom")
                         .HasForeignKey("WarehouseFromId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Warehouse.WarehouseEntity", "WarehouseTo")
-                        .WithMany("DocsWithWarehousesTo")
+                        .WithMany("WarehousesTo")
                         .HasForeignKey("WarehouseToId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -465,26 +466,24 @@ namespace KwiatkiBeatkiAPI.Migrations
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Item.ItemEntity", b =>
                 {
                     b.HasOne("KwiatkiBeatkiAPI.Entities.BulkPack.BulkPackEntity", "BulkPack")
-                        .WithMany("Items")
-                        .HasForeignKey("BulkPackId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("BulkPackId");
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.ItemType.ItemTypeEntity", "ItemType")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("ItemTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.MeasurementUnit.MeasurementUnitEntity", "MeasurementUnit")
-                        .WithMany("Items")
+                        .WithMany()
                         .HasForeignKey("MeasurementUnitId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Producer.ProducerEntity", "Producer")
-                        .WithMany("Items")
-                        .HasForeignKey("ProducerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .WithMany()
+                        .HasForeignKey("ProducerId");
 
                     b.Navigation("BulkPack");
 
@@ -504,9 +503,9 @@ namespace KwiatkiBeatkiAPI.Migrations
                         .IsRequired();
 
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Property.PropertyEntity", "Property")
-                        .WithMany("ItemProperties")
+                        .WithMany()
                         .HasForeignKey("PropertyId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Item");
@@ -536,27 +535,17 @@ namespace KwiatkiBeatkiAPI.Migrations
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.User.UserEntity", b =>
                 {
                     b.HasOne("KwiatkiBeatkiAPI.Entities.Role.RoleEntity", "Role")
-                        .WithMany("Users")
+                        .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.BulkPack.BulkPackEntity", b =>
-                {
-                    b.Navigation("Items");
-                });
-
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Document.DocumentEntity", b =>
                 {
                     b.Navigation("Lines");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.DocumentType.DocumentTypeEntity", b =>
-                {
-                    b.Navigation("Documents");
                 });
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Item.ItemEntity", b =>
@@ -566,36 +555,6 @@ namespace KwiatkiBeatkiAPI.Migrations
                     b.Navigation("Lines");
                 });
 
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.ItemType.ItemTypeEntity", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.MeasurementUnit.MeasurementUnitEntity", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Producer.ProducerEntity", b =>
-                {
-                    b.Navigation("Items");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Property.PropertyEntity", b =>
-                {
-                    b.Navigation("ItemProperties");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Role.RoleEntity", b =>
-                {
-                    b.Navigation("Users");
-                });
-
-            modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.TradePartner.TradePartnerEntity", b =>
-                {
-                    b.Navigation("Documents");
-                });
-
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.User.UserEntity", b =>
                 {
                     b.Navigation("Documents");
@@ -603,9 +562,9 @@ namespace KwiatkiBeatkiAPI.Migrations
 
             modelBuilder.Entity("KwiatkiBeatkiAPI.Entities.Warehouse.WarehouseEntity", b =>
                 {
-                    b.Navigation("DocsWithWarehousesFrom");
+                    b.Navigation("WarehousesFrom");
 
-                    b.Navigation("DocsWithWarehousesTo");
+                    b.Navigation("WarehousesTo");
                 });
 #pragma warning restore 612, 618
         }

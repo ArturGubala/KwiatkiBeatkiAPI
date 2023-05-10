@@ -1,4 +1,6 @@
-﻿namespace KwiatkiBeatkiAPI.Entities.Producer
+﻿using KwiatkiBeatkiAPI.Entities.Item;
+
+namespace KwiatkiBeatkiAPI.Entities.Producer
 {
     public class ProducerEntity
     {
@@ -7,5 +9,6 @@
         public string? PhoneNumber { get; set; } = null;
         public string? Email { get; set; } = null;
         public string? Website { get; set; } = null;
+        public virtual IEnumerable<ItemEntity> Items { get; set; }
     }
 }

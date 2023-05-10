@@ -1,4 +1,6 @@
-﻿namespace KwiatkiBeatkiAPI.Entities.TradePartner
+﻿using KwiatkiBeatkiAPI.Entities.Document;
+
+namespace KwiatkiBeatkiAPI.Entities.TradePartner
 {
     public class TradePartnerEntity
     {
@@ -12,5 +14,6 @@
         public string? City { get; set; }
         public string? PostalCode { get; set; }
         public string? Nip { get; set; }
+        public virtual IEnumerable<DocumentEntity> Documents { get; set; }
     }
 }

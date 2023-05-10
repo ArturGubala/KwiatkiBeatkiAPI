@@ -39,27 +39,69 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<UserEntity>();
-            modelBuilder.Entity<RoleEntity>();
-            modelBuilder.Entity<MeasurementUnitEntity>();
-            modelBuilder.Entity<ItemTypeEntity>();
-            modelBuilder.Entity<BulkPackEntity>();
-            modelBuilder.Entity<ProducerEntity>();
-            modelBuilder.Entity<PropertyEntity>();
+            modelBuilder.Entity<UserEntity>()
+                .HasMany(u => u.Documents)
+                .WithOne(d => d.User)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<RoleEntity>()
+                .HasMany(r => r.Users)
+                .WithOne(u => u.Role)
+                .HasForeignKey(u => u.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<MeasurementUnitEntity>()
+                .HasMany(m => m.Items)
+                .WithOne(i => i.MeasurementUnit)
+                .HasForeignKey(i => i.MeasurementUnitId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ItemTypeEntity>()
+                .HasMany(it => it.Items)
+                .WithOne(i => i.ItemType)
+                .HasForeignKey(i => i.ItemTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<BulkPackEntity>()
+                .HasMany(b => b.Items)
+                .WithOne(i => i.BulkPack)
+                .HasForeignKey(i => i.BulkPackId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProducerEntity>()
+                .HasMany(p => p.Items)
+                .WithOne(i => i.Producer)
+                .HasForeignKey(i => i.ProducerId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PropertyEntity>()
+                .HasMany(p => p.ItemProperties)
+                .WithOne(ip => ip.Property)
+                .HasForeignKey(ip => ip.PropertyId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<ItemPropertyEntity>();
-            modelBuilder.Entity<ItemEntity>();
+            modelBuilder.Entity<ItemEntity>()
+                .HasMany(i => i.Lines)
+                .WithOne(l => l.Item)
+                .HasForeignKey(i => i.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<WarehouseEntity>()
-                .HasMany(w => w.WarehousesFrom)
+                .HasMany(w => w.DocsWithWarehousesFrom)
                 .WithOne(d => d.WarehouseFrom)
-                .HasForeignKey("WarehouseFromId")
-                .IsRequired(false);
+                .HasForeignKey(d => d.WarehouseFromId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<WarehouseEntity>()
-                .HasMany(w => w.WarehousesTo)
+                .HasMany(w => w.DocsWithWarehousesTo)
                 .WithOne(d => d.WarehouseTo)
-                .HasForeignKey("WarehouseToId")
-                .IsRequired(false);
-            modelBuilder.Entity<DocumentTypeEntity>();
-            modelBuilder.Entity<TradePartnerEntity>();
+                .HasForeignKey(d => d.WarehouseToId)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<DocumentTypeEntity>()
+                .HasMany(dt => dt.Documents)
+                .WithOne(d => d.DocumentType)
+                .HasForeignKey(d => d.DocumentTypeId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TradePartnerEntity>()
+                .HasMany(t => t.Documents)
+                .WithOne(d => d.TradePartner)
+                .HasForeignKey(d => d.TradePartnerId)
+                .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<LineEntity>();
             modelBuilder.Entity<DocumentEntity>();
         }

@@ -1,4 +1,5 @@
-﻿using KwiatkiBeatkiAPI.Entities.Role;
+﻿using KwiatkiBeatkiAPI.Entities.Document;
+using KwiatkiBeatkiAPI.Entities.Role;
 
 namespace KwiatkiBeatkiAPI.Entities.User
 {
@@ -13,5 +14,6 @@ namespace KwiatkiBeatkiAPI.Entities.User
         public virtual RoleEntity Role { get; set; }
         public string? RefreshToken { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        public virtual IEnumerable<DocumentEntity> Documents { get; set; }
     }
 }

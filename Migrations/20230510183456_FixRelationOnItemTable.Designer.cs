@@ -4,6 +4,7 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KwiatkiBeatkiAPI.Migrations
 {
     [DbContext(typeof(KwiatkiBeatkiDbContext))]
-    partial class KwiatkiBeatkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230510183456_FixRelationOnItemTable")]
+    partial class FixRelationOnItemTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -187,10 +189,9 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("ItemId");
 
-                    b.HasIndex("ItemId", "PropertyId")
-                        .IsUnique();
+                    b.HasIndex("PropertyId");
 
                     b.ToTable("ItemProperty");
                 });

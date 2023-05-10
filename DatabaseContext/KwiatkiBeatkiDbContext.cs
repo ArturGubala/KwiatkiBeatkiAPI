@@ -74,11 +74,18 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .WithOne(ip => ip.Property)
                 .HasForeignKey(ip => ip.PropertyId)
                 .OnDelete(DeleteBehavior.Restrict);
-            modelBuilder.Entity<ItemPropertyEntity>();
+            modelBuilder.Entity<ItemPropertyEntity>()
+                .HasIndex(ip => new { ip.ItemId, ip.PropertyId })
+                .IsUnique();
             modelBuilder.Entity<ItemEntity>()
                 .HasMany(i => i.Lines)
                 .WithOne(l => l.Item)
                 .HasForeignKey(i => i.ItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ItemEntity>()
+                .HasMany(i => i.ItemProperties)
+                .WithOne(ip => ip.Item)
+                .HasForeignKey(ip => ip.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<WarehouseEntity>()
                 .HasMany(w => w.DocsWithWarehousesFrom)

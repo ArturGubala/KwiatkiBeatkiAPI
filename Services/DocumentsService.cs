@@ -5,9 +5,6 @@ using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Models.Document;
 using KwiatkiBeatkiAPI.Exeptions;
 using Microsoft.EntityFrameworkCore;
-using KwiatkiBeatkiAPI.Entities.Item;
-using KwiatkiBeatkiAPI.Models.Item;
-using System.Reflection.Metadata;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -16,6 +13,8 @@ namespace KwiatkiBeatkiAPI.Services
         IEnumerable<DocumentDto> GetAll();
         DocumentDto GetById(int documentId);
         int CreateDocument(CreateDocumentDto createDocumentDto);
+        void UpdateDocument(int id, UpdateDocumentDto updateDocumentDto);
+        void DeleteDocument(int documentId);
     }
     public class DocumentsService : IDocumentsService
     {
@@ -96,6 +95,27 @@ namespace KwiatkiBeatkiAPI.Services
 
             return documentEntity.Id;
         }
+        public void UpdateDocument(int id, UpdateDocumentDto updateDocumentDto)
+        {
+            var documentToUpdate = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
+
+            if (documentToUpdate == null)
+                throw new NotFoundException("Document not found");
+
+            documentToUpdate.Remarks = updateDocumentDto.Remarks;
+
+            _kwiatkiBeatkiDbContext.SaveChanges();
+        }
+        public void DeleteDocument(int id)
+        {
+            var documentToDelete = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
+
+            if (documentToDelete == null)
+                throw new NotFoundException("Document not found");
+
+            _kwiatkiBeatkiDbContext.Document.Remove(documentToDelete);
+            _kwiatkiBeatkiDbContext.SaveChanges();
+        }
         private DocumentEntity PrepareDocumentEntity(CreateDocumentDto createDocumentDto)
         {
             var documentEntity = _mapper.Map<DocumentEntity>(createDocumentDto);
@@ -129,7 +149,5 @@ namespace KwiatkiBeatkiAPI.Services
 
             return documentTypeAbbreviation;
         }
-
-
     }
 }

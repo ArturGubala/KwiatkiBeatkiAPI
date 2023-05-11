@@ -4,6 +4,7 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace KwiatkiBeatkiAPI.Migrations
 {
     [DbContext(typeof(KwiatkiBeatkiDbContext))]
-    partial class KwiatkiBeatkiDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230511170315_AddIndexesToTables")]
+    partial class AddIndexesToTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -142,14 +144,14 @@ namespace KwiatkiBeatkiAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int?>("ProducerId")
                         .HasColumnType("int");
 
                     b.Property<string>("StockCode")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -163,10 +165,11 @@ namespace KwiatkiBeatkiAPI.Migrations
 
                     b.HasIndex("MeasurementUnitId");
 
-                    b.HasIndex("ProducerId");
+                    b.HasIndex("Name")
+                        .IsUnique()
+                        .HasFilter("[Name] IS NOT NULL");
 
-                    b.HasIndex("StockCode")
-                        .IsUnique();
+                    b.HasIndex("ProducerId");
 
                     b.ToTable("Item");
                 });

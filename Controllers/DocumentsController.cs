@@ -1,4 +1,5 @@
 ﻿using KwiatkiBeatkiAPI.Models.Document;
+using KwiatkiBeatkiAPI.Models.Item;
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,20 @@ namespace KwiatkiBeatkiAPI.Controllers
         {
             var createdDocumentId = _documentsService.CreateDocument(createDocumentDto);
             return Created($"api/documents/{createdDocumentId}", null);
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            _documentsService.DeleteDocument(id);
+            return NoContent();
+        }
+
+        [HttpPut("{id:int}")]
+        public IActionResult Put([FromRoute] int id, [FromBody] UpdateDocumentDto updateDocumentDto)
+        {
+            _documentsService.UpdateDocument(id, updateDocumentDto);
+            return NoContent();
         }
     }
 }

@@ -44,39 +44,56 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .WithOne(d => d.User)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<UserEntity>()
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
             modelBuilder.Entity<RoleEntity>()
                 .HasMany(r => r.Users)
                 .WithOne(u => u.Role)
                 .HasForeignKey(u => u.RoleId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<RoleEntity>()
+                .HasIndex(r => r.Name)
+                .IsUnique();
+
             modelBuilder.Entity<MeasurementUnitEntity>()
                 .HasMany(m => m.Items)
                 .WithOne(i => i.MeasurementUnit)
                 .HasForeignKey(i => i.MeasurementUnitId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ItemTypeEntity>()
                 .HasMany(it => it.Items)
                 .WithOne(i => i.ItemType)
                 .HasForeignKey(i => i.ItemTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<BulkPackEntity>()
                 .HasMany(b => b.Items)
                 .WithOne(i => i.BulkPack)
                 .HasForeignKey(i => i.BulkPackId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ProducerEntity>()
                 .HasMany(p => p.Items)
                 .WithOne(i => i.Producer)
                 .HasForeignKey(i => i.ProducerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<PropertyEntity>()
                 .HasMany(p => p.ItemProperties)
                 .WithOne(ip => ip.Property)
                 .HasForeignKey(ip => ip.PropertyId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<ItemPropertyEntity>()
                 .HasIndex(ip => new { ip.ItemId, ip.PropertyId })
                 .IsUnique();
+            modelBuilder.Entity<ItemPropertyEntity>()
+                .HasIndex(ip => ip.ItemId)
+                .IsUnique(false);
+
             modelBuilder.Entity<ItemEntity>()
                 .HasMany(i => i.Lines)
                 .WithOne(l => l.Item)
@@ -87,6 +104,13 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .WithOne(ip => ip.Item)
                 .HasForeignKey(ip => ip.ItemId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ItemEntity>()
+                .HasIndex(i => i.StockCode)
+                .IsUnique();
+            modelBuilder.Entity<ItemEntity>()
+                .HasIndex(i => i.Alias)
+                .IsUnique();
+
             modelBuilder.Entity<WarehouseEntity>()
                 .HasMany(w => w.DocsWithWarehousesFrom)
                 .WithOne(d => d.WarehouseFrom)
@@ -99,17 +123,27 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .HasForeignKey(d => d.WarehouseToId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<WarehouseEntity>()
+                .HasIndex(w => w.Name)
+                .IsUnique();
+            modelBuilder.Entity<WarehouseEntity>()
+                .HasIndex(w => w.Code)
+                .IsUnique();
+
             modelBuilder.Entity<DocumentTypeEntity>()
                 .HasMany(dt => dt.Documents)
                 .WithOne(d => d.DocumentType)
                 .HasForeignKey(d => d.DocumentTypeId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<TradePartnerEntity>()
                 .HasMany(t => t.Documents)
                 .WithOne(d => d.TradePartner)
                 .HasForeignKey(d => d.TradePartnerId)
                 .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<LineEntity>();
+
             modelBuilder.Entity<DocumentEntity>();
         }
     }

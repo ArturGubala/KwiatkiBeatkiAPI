@@ -80,12 +80,18 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .WithOne(i => i.Producer)
                 .HasForeignKey(i => i.ProducerId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<ProducerEntity>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
 
             modelBuilder.Entity<PropertyEntity>()
                 .HasMany(p => p.ItemProperties)
                 .WithOne(ip => ip.Property)
                 .HasForeignKey(ip => ip.PropertyId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<PropertyEntity>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
 
             modelBuilder.Entity<ItemPropertyEntity>()
                 .HasIndex(ip => new { ip.ItemId, ip.PropertyId })
@@ -141,6 +147,9 @@ namespace KwiatkiBeatkiAPI.DatabaseContext
                 .WithOne(d => d.TradePartner)
                 .HasForeignKey(d => d.TradePartnerId)
                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<TradePartnerEntity>()
+                .HasIndex(p => p.Name)
+                .IsUnique();
 
             modelBuilder.Entity<LineEntity>();
 

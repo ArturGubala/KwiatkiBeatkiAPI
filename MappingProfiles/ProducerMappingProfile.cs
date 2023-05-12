@@ -9,6 +9,10 @@ namespace KwiatkiBeatkiAPI.MappingProfiles
         public ProducerMappingProfile()
         {
             CreateMap<ProducerEntity, ProducerDto>();
+
+            CreateMap<CreateProducerDto, ProducerEntity>();
+
+            CreateMap<UpdateProducerDto, ProducerEntity>();
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using KwiatkiBeatkiAPI.Services;
+﻿using KwiatkiBeatkiAPI.Models.Producer;
+using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,6 +21,34 @@ namespace KwiatkiBeatkiAPI.Controllers
         {
             var items = _producerService.GetAll();
             return Ok(items);
+        }
+
+        [HttpGet("{id:int}")]
+        public IActionResult Get([FromRoute] int id)
+        {
+            var producer = _producerService.GetById(id);
+            return Ok(producer);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] CreateProducerDto createProducerDto)
+        {
+            var createdProducerId = _producerService.CreateProducer(createProducerDto);
+            return Created($"api/producers/{createdProducerId}", null);
+        }
+
+        [HttpDelete("{id:int}")]
+        public IActionResult Delete(int id)
+        {
+            _producerService.DeleteProducer(id);
+            return NoContent();
+        }
+
+        [HttpPut("{id:int}")]
+        public IActionResult Put([FromRoute] int id, [FromBody] UpdateProducerDto updateProducerDto)
+        {
+            _producerService.UpdateProducer(id, updateProducerDto);
+            return NoContent();
         }
     }
 }

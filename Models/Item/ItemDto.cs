@@ -1,4 +1,6 @@
-﻿namespace KwiatkiBeatkiAPI.Models.Item
+﻿using KwiatkiBeatkiAPI.Models.ItemProperty;
+
+namespace KwiatkiBeatkiAPI.Models.Item
 {
     public class ItemDto
     {

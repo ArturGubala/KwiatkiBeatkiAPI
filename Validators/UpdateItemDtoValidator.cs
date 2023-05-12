@@ -34,7 +34,7 @@ namespace KwiatkiBeatkiAPI.Validators
 
                     var stockCodeExists = kwiatkiBeatkiDbContext.Item.Any(i => i.StockCode == value && i.Id != itemIdFromRoute);
                     if (stockCodeExists)
-                        context.AddFailure($"StockCode", $"Kartoteka '{value}' istnieje już w bazie");
+                        context.AddFailure($"StockCode", $"Kartoteka [{value}] istnieje już w bazie");
                 });
         }
     }

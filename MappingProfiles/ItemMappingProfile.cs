@@ -2,6 +2,7 @@
 using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Models.Item;
+using KwiatkiBeatkiAPI.Models.ItemProperty;
 
 namespace KwiatkiBeatkiAPI.MappingProfiles
 {
@@ -22,6 +23,8 @@ namespace KwiatkiBeatkiAPI.MappingProfiles
 
             CreateMap<ItemPropertyEntity, ItemPropertyDto>()
                 .ForMember(m => m.Name, c => c.MapFrom(s => s.Property.Name));
+
+            CreateMap<CreateItemPropertyDto, ItemPropertyEntity>();
         }
     }
 }

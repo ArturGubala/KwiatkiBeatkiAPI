@@ -9,11 +9,11 @@ namespace KwiatkiBeatkiAPI.Services
 {
     public interface IItemsService
     {
-        IEnumerable<ItemDto> GetAll();
-        ItemDto GetById(int id);
-        int CreateItem(CreateUpdateItemDto createUpdateItemDto);
-        void DeleteItem(int id);
-        void UpdateItem(int id, CreateUpdateItemDto createUpdateItemDto);
+        Task<IEnumerable<ItemDto>> GetAllAsync();
+        Task<ItemDto> GetByIdAsync(int id);
+        Task<int> CreateItemAsync(CreateUpdateItemDto createUpdateItemDto);
+        Task DeleteItemAsync(int id);
+        Task UpdateItemAsync(int id, CreateUpdateItemDto createUpdateItemDto);
     }
     public class ItemsService : IItemsService
     {
@@ -27,32 +27,32 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
         }
 
-        public IEnumerable<ItemDto> GetAll()
+        public async Task<IEnumerable<ItemDto>> GetAllAsync()
         {
-            var itemEntities = _kwiatkiBeatkiDbContext.Item
+            var itemEntities = await _kwiatkiBeatkiDbContext.Item
                 .Include(i => i.ItemType)
                 .Include(i => i.BulkPack)
                 .Include(i => i.MeasurementUnit)
                 .Include(i => i.Producer)
                 .Include(i => i.ItemProperties)
                     .ThenInclude(p => p.Property)
-                .ToList();
+                .ToListAsync();
 
             var itemDtos = _mapper.Map<IEnumerable<ItemDto>>(itemEntities);
 
             return itemDtos;
         }
 
-        public ItemDto GetById(int id)
+        public async Task<ItemDto> GetByIdAsync(int id)
         {
-            var itemEntity = _kwiatkiBeatkiDbContext.Item
+            var itemEntity = await _kwiatkiBeatkiDbContext.Item
                 .Include(i => i.ItemType)
                 .Include(i => i.BulkPack)
                 .Include(i => i.MeasurementUnit)
                 .Include(i => i.Producer)
                 .Include(i => i.ItemProperties)
                     .ThenInclude(x => x.Property)
-                .FirstOrDefault(i => i.Id == id);
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemEntity is null)
                 throw new NotFoundException("Item not found");
@@ -62,30 +62,30 @@ namespace KwiatkiBeatkiAPI.Services
             return itemDto;
         }
 
-        public int CreateItem(CreateUpdateItemDto createUpdateItemDto)
+        public async Task<int> CreateItemAsync(CreateUpdateItemDto createUpdateItemDto)
         {
             var itemEntity = _mapper.Map<ItemEntity>(createUpdateItemDto);
 
             _kwiatkiBeatkiDbContext.Item.Add(itemEntity);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
 
             return itemEntity.Id;
         }
 
-        public void DeleteItem(int id)
+        public async Task DeleteItemAsync(int id)
         {
-            var itemToDelete = _kwiatkiBeatkiDbContext.Item.FirstOrDefault(i => i.Id == id);
+            var itemToDelete = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemToDelete == null)
                 throw new NotFoundException("Item not found");
 
             _kwiatkiBeatkiDbContext.Item.Remove(itemToDelete);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
 
-        public void UpdateItem(int id, CreateUpdateItemDto createUpdateItemDto)
+        public async Task UpdateItemAsync(int id, CreateUpdateItemDto createUpdateItemDto)
         {
-            var itemToUpdate = _kwiatkiBeatkiDbContext.Item.FirstOrDefault(i => i.Id == id);
+            var itemToUpdate = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemToUpdate == null)
                 throw new NotFoundException("Item not found");
@@ -99,7 +99,7 @@ namespace KwiatkiBeatkiAPI.Services
             itemToUpdate.Alias = createUpdateItemDto.Alias;
             itemToUpdate.BarCode = createUpdateItemDto.BarCode;
 
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
     }
 }

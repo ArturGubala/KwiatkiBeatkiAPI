@@ -17,37 +17,37 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var items = _itemService.GetAll();
+            var items = await _itemService.GetAllAsync();
             return Ok(items);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var item = _itemService.GetById(id);
+            var item = await _itemService.GetByIdAsync(id);
             return Ok(item);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
+        public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
-            var createdItemId = _itemService.CreateItem(createUpdateItemDto);
+            var createdItemId = await _itemService.CreateItemAsync(createUpdateItemDto);
             return Created($"api/items/{createdItemId}", null);
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _itemService.DeleteItem(id);
+            await _itemService.DeleteItemAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Put([FromRoute]int id, [FromBody]CreateUpdateItemDto createUpdateItemDto) 
+        public async Task<IActionResult> Put([FromRoute]int id, [FromBody]CreateUpdateItemDto createUpdateItemDto) 
         {
-            _itemService.UpdateItem(id, createUpdateItemDto);
+            await _itemService.UpdateItemAsync(id, createUpdateItemDto);
             return NoContent();
         }
     }

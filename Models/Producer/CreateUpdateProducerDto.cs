@@ -1,6 +1,6 @@
 ﻿namespace KwiatkiBeatkiAPI.Models.Producer
 {
-    public class CreateProducerDto
+    public class CreateUpdateProducerDto
     {
         public string Name { get; set; }
         public string? PhoneNumber { get; set; } = null;

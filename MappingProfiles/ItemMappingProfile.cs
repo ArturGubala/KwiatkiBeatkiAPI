@@ -17,9 +17,7 @@ namespace KwiatkiBeatkiAPI.MappingProfiles
                 .ForMember(m => m.MeasurementUnit, c => c.MapFrom(s => s.MeasurementUnit.Abbreviation))
                 .ForMember(m => m.ItemProperties, c => c.MapFrom(s => s.ItemProperties));
 
-            CreateMap<CreateItemDto, ItemEntity>();
-
-            CreateMap<UpdateItemDto, ItemEntity>();
+            CreateMap<CreateUpdateItemDto, ItemEntity>();
 
             CreateMap<ItemPropertyEntity, ItemPropertyDto>()
                 .ForMember(m => m.Name, c => c.MapFrom(s => s.Property.Name));

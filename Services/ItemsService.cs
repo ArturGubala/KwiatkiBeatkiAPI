@@ -11,9 +11,9 @@ namespace KwiatkiBeatkiAPI.Services
     {
         IEnumerable<ItemDto> GetAll();
         ItemDto GetById(int id);
-        int CreateItem(CreateItemDto createItemDto);
+        int CreateItem(CreateUpdateItemDto createUpdateItemDto);
         void DeleteItem(int id);
-        void UpdateItem(int id, UpdateItemDto createUpdateItemDto);
+        void UpdateItem(int id, CreateUpdateItemDto createUpdateItemDto);
     }
     public class ItemsService : IItemsService
     {
@@ -62,9 +62,9 @@ namespace KwiatkiBeatkiAPI.Services
             return itemDto;
         }
 
-        public int CreateItem(CreateItemDto createItemDto)
+        public int CreateItem(CreateUpdateItemDto createUpdateItemDto)
         {
-            var itemEntity = _mapper.Map<ItemEntity>(createItemDto);
+            var itemEntity = _mapper.Map<ItemEntity>(createUpdateItemDto);
 
             _kwiatkiBeatkiDbContext.Item.Add(itemEntity);
             _kwiatkiBeatkiDbContext.SaveChanges();
@@ -83,21 +83,21 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext.SaveChanges();
         }
 
-        public void UpdateItem(int id, UpdateItemDto updateItemDto)
+        public void UpdateItem(int id, CreateUpdateItemDto createUpdateItemDto)
         {
             var itemToUpdate = _kwiatkiBeatkiDbContext.Item.FirstOrDefault(i => i.Id == id);
 
             if (itemToUpdate == null)
                 throw new NotFoundException("Item not found");
 
-            itemToUpdate.ItemTypeId = updateItemDto.ItemTypeId;
-            itemToUpdate.BulkPackId = updateItemDto.BulkPackId;
-            itemToUpdate.ProducerId = updateItemDto.ProducerId;
-            itemToUpdate.MeasurementUnitId = updateItemDto.MeasurementUnitId;
-            itemToUpdate.StockCode = updateItemDto.StockCode;
-            itemToUpdate.Name = updateItemDto.Name;
-            itemToUpdate.Alias = updateItemDto.Alias;
-            itemToUpdate.BarCode = updateItemDto.BarCode;
+            itemToUpdate.ItemTypeId = createUpdateItemDto.ItemTypeId;
+            itemToUpdate.BulkPackId = createUpdateItemDto.BulkPackId;
+            itemToUpdate.ProducerId = createUpdateItemDto.ProducerId;
+            itemToUpdate.MeasurementUnitId = createUpdateItemDto.MeasurementUnitId;
+            itemToUpdate.StockCode = createUpdateItemDto.StockCode;
+            itemToUpdate.Name = createUpdateItemDto.Name;
+            itemToUpdate.Alias = createUpdateItemDto.Alias;
+            itemToUpdate.BarCode = createUpdateItemDto.BarCode;
 
             _kwiatkiBeatkiDbContext.SaveChanges();
         }

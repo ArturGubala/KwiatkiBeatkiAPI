@@ -10,8 +10,8 @@ namespace KwiatkiBeatkiAPI.Services
     {
         IEnumerable<ProducerDto> GetAll();
         ProducerDto GetById(int id);
-        int CreateProducer(CreateProducerDto createProducerDto);
-        void UpdateProducer(int id, UpdateProducerDto updateProducerDto);
+        int CreateProducer(CreateUpdateProducerDto createUpdateProducerDto);
+        void UpdateProducer(int id, CreateUpdateProducerDto createUpdateProducerDto);
         void DeleteProducer(int id);
     }
     public class ProducersService : IProducersService
@@ -44,9 +44,9 @@ namespace KwiatkiBeatkiAPI.Services
             return producerDto;
         }
 
-        public int CreateProducer(CreateProducerDto createProducerDto)
+        public int CreateProducer(CreateUpdateProducerDto createUpdateProducerDto)
         {
-            var producerEntity = _mapper.Map<ProducerEntity>(createProducerDto);
+            var producerEntity = _mapper.Map<ProducerEntity>(createUpdateProducerDto);
 
             _kwiatkiBeatkiDbContext.Producer.Add(producerEntity);
             _kwiatkiBeatkiDbContext.SaveChanges();
@@ -65,17 +65,17 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext.SaveChanges();
         }
 
-        public void UpdateProducer(int id, UpdateProducerDto updateProducerDto)
+        public void UpdateProducer(int id, CreateUpdateProducerDto createUpdateProducerDto)
         {
             var producerToUpdate = _kwiatkiBeatkiDbContext.Producer.FirstOrDefault(i => i.Id == id);
 
             if (producerToUpdate == null)
                 throw new NotFoundException("Producent nie został odnaleziony.");
 
-            producerToUpdate.Name = updateProducerDto.Name;
-            producerToUpdate.PhoneNumber = updateProducerDto.PhoneNumber;
-            producerToUpdate.Email = updateProducerDto.Email;
-            producerToUpdate.Website = updateProducerDto.Website;
+            producerToUpdate.Name = createUpdateProducerDto.Name;
+            producerToUpdate.PhoneNumber = createUpdateProducerDto.PhoneNumber;
+            producerToUpdate.Email = createUpdateProducerDto.Email;
+            producerToUpdate.Website = createUpdateProducerDto.Website;
 
             _kwiatkiBeatkiDbContext.SaveChanges();
         }

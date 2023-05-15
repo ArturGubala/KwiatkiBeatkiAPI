@@ -1,6 +1,6 @@
 ﻿namespace KwiatkiBeatkiAPI.Models.Item
 {
-    public class CreateItemDto
+    public class CreateUpdateItemDto
     {
         public int ItemTypeId { get; set; }
         public int? BulkPackId { get; set; }

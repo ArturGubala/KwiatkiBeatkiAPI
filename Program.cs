@@ -79,13 +79,9 @@ builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-builder.Services.AddScoped<IValidator<CreateItemDto>, CreateItemDtoValidator>();
-builder.Services.AddScoped<IValidator<UpdateItemDto>, UpdateItemDtoValidator>();
-builder.Services.AddScoped<IValidator<CreateDocumentDto>, CreateDocumentDtoValidator>();
-builder.Services.AddScoped<IValidator<CreateLineDto>, CreateLineDtoValidator>();
 builder.Services.AddScoped<IValidator<CreateItemPropertyDto>, CreateItemPropertyDtoValidator>();
-builder.Services.AddScoped<IValidator<CreateProducerDto>, CreateProducerDtoValidator>();
-builder.Services.AddScoped<IValidator<UpdateProducerDto>, UpdateProducerDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateUpdateItemDto>, CreateUpdateItemDtoValidator>();
+builder.Services.AddScoped<IValidator<CreateUpdateProducerDto>, CreateUpdateProducerDtoValidator>();
 
 builder.Services.AddDbContext<KwiatkiBeatkiDbContext>
     (options => options.UseSqlServer(builder.Configuration.GetConnectionString("KwiatkiBeatkiDbConnection")));

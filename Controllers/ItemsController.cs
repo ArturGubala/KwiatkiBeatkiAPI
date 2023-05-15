@@ -31,9 +31,9 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateItemDto createItemDto)
+        public IActionResult Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
-            var createdItemId = _itemService.CreateItem(createItemDto);
+            var createdItemId = _itemService.CreateItem(createUpdateItemDto);
             return Created($"api/items/{createdItemId}", null);
         }
 
@@ -45,9 +45,9 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Put([FromRoute]int id, [FromBody]UpdateItemDto updateItemDto) 
+        public IActionResult Put([FromRoute]int id, [FromBody]CreateUpdateItemDto createUpdateItemDto) 
         {
-            _itemService.UpdateItem(id, updateItemDto);
+            _itemService.UpdateItem(id, createUpdateItemDto);
             return NoContent();
         }
     }

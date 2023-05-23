@@ -12,15 +12,9 @@ using System.Text;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using FluentValidation;
-using KwiatkiBeatkiAPI.Models.Item;
-using KwiatkiBeatkiAPI.Validators;
 using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using KwiatkiBeatkiAPI.Models.Document;
-using KwiatkiBeatkiAPI.Models.Line;
-using KwiatkiBeatkiAPI.Models.ItemProperty;
-using KwiatkiBeatkiAPI.Models.Producer;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();

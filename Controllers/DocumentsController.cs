@@ -32,6 +32,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
         
         [HttpPost]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var createdDocumentId = _documentsService.CreateDocument(createDocumentDto);
@@ -39,6 +40,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Delete(int id)
         {
             _documentsService.DeleteDocument(id);
@@ -46,6 +48,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Put([FromRoute] int id, [FromBody] UpdateDocumentDto updateDocumentDto)
         {
             _documentsService.UpdateDocument(id, updateDocumentDto);

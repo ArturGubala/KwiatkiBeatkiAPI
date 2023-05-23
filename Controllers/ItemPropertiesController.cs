@@ -17,6 +17,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Post([FromRoute] int itemId, [FromBody] CreateItemPropertyDto createItemPropertyDto)
         {
             var createdItemPropertyId = _itemPropertyiesService.CreateItemProperty(itemId, createItemPropertyDto);
@@ -24,6 +25,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Delete(int id)
         {
             _itemPropertyiesService.DeleteItemProperty(id);
@@ -31,6 +33,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Admin,Menager")]
         public IActionResult Put([FromRoute] int id, [FromBody] UpdateItemPropertyDto updateItemPropertyDto)
         {
             _itemPropertyiesService.UpdateItemProperty(id, updateItemPropertyDto);

@@ -5,17 +5,15 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/users")]
+    [Route("api/v1/users")]
     [ApiController]
     [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUsersService _usersService;
-        private readonly IUserContextService _userContextService;
-        public UsersController(IUsersService userService, IUserContextService userContextService)
+        public UsersController(IUsersService userService)
         {
             _usersService = userService;
-            _userContextService = userContextService;
         }
         [HttpGet("logged-user")]
         public IActionResult Get()

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/producers")]
+    [Route("api/v1/producers")]
     [ApiController]
     [Authorize]
     public class ProducersController : ControllerBase
@@ -19,22 +19,22 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var items = _producerService.GetAll();
-            return Ok(items);
+            var producerDtos = _producerService.GetAll();
+            return Ok(producerDtos);
         }
 
         [HttpGet("{id:int}")]
         public IActionResult Get([FromRoute] int id)
         {
-            var producer = _producerService.GetById(id);
-            return Ok(producer);
+            var producerDto = _producerService.GetById(id);
+            return Ok(producerDto);
         }
 
         [HttpPost]
         public IActionResult Post([FromBody] CreateUpdateProducerDto createUpdateProducerDto)
         {
             var createdProducerId = _producerService.CreateProducer(createUpdateProducerDto);
-            return Created($"api/producers/{createdProducerId}", null);
+            return Created($"api/v1/producers/{createdProducerId}", null);
         }
 
         [HttpDelete("{id:int}")]

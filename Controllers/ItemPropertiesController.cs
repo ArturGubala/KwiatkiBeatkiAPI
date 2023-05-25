@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/items/{itemId:int}/properties")]
+    [Route("api/v1/items/{itemId:int}/properties")]
     [ApiController]
     [Authorize]
     public class ItemPropertiesController : ControllerBase
@@ -21,12 +21,12 @@ namespace KwiatkiBeatkiAPI.Controllers
         public IActionResult Post([FromRoute] int itemId, [FromBody] CreateItemPropertyDto createItemPropertyDto)
         {
             var createdItemPropertyId = _itemPropertyiesService.CreateItemProperty(itemId, createItemPropertyDto);
-            return Created($"api/items/{itemId}/properties/{createdItemPropertyId}", null);
+            return Created($"api/v1/items/{itemId}/properties/{createdItemPropertyId}", null);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             _itemPropertyiesService.DeleteItemProperty(id);
             return NoContent();

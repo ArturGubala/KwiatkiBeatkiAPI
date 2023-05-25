@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/bulk-packs")]
+    [Route("api/v1/bulk-packs")]
     [ApiController]
     [Authorize]
     public class BulkPacksController : ControllerBase
@@ -18,8 +18,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var items = _bulkPackService.GetAll();
-            return Ok(items);
+            var bulkPackDtos = _bulkPackService.GetAll();
+            return Ok(bulkPackDtos);
         }
     }
 }

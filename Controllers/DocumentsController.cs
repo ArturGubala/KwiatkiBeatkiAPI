@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/documents")]
+    [Route("api/v1/documents")]
     [ApiController]
     [Authorize]
     public class DocumentsController : ControllerBase
@@ -36,12 +36,12 @@ namespace KwiatkiBeatkiAPI.Controllers
         public IActionResult Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var createdDocumentId = _documentsService.CreateDocument(createDocumentDto);
-            return Created($"api/documents/{createdDocumentId}", null);
+            return Created($"api/v1/documents/{createdDocumentId}", null);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete([FromRoute] int id)
         {
             _documentsService.DeleteDocument(id);
             return NoContent();

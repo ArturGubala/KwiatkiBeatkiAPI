@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/items")]
+    [Route("api/v1/items")]
     [ApiController]
     [Authorize]
     public class ItemsController : ControllerBase
@@ -19,15 +19,15 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var items = await _itemService.GetAllAsync();
-            return Ok(items);
+            var itemDtos = await _itemService.GetAllAsync();
+            return Ok(itemDtos);
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get(int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var item = await _itemService.GetByIdAsync(id);
-            return Ok(item);
+            var itemDto = await _itemService.GetByIdAsync(id);
+            return Ok(itemDto);
         }
 
         [HttpPost]
@@ -35,12 +35,12 @@ namespace KwiatkiBeatkiAPI.Controllers
         public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
             var createdItemId = await _itemService.CreateItemAsync(createUpdateItemDto);
-            return Created($"api/items/{createdItemId}", null);
+            return Created($"api/v1/items/{createdItemId}", null);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await _itemService.DeleteItemAsync(id);
             return NoContent();

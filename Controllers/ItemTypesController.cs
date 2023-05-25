@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/item-types")]
+    [Route("api/v1/item-types")]
     [ApiController]
     [Authorize]
     public class ItemTypesController : ControllerBase
@@ -18,8 +18,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var items = _itemTypeService.GetAll();
-            return Ok(items);
+            var itemTypeDtos = _itemTypeService.GetAll();
+            return Ok(itemTypeDtos);
         }
     }
 }

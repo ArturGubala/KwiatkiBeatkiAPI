@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/authorize")]
+    [Route("api/v1/authorize")]
     [ApiController]
     public class AuthorizeController : ControllerBase
     {
@@ -41,14 +41,14 @@ namespace KwiatkiBeatkiAPI.Controllers
             var userDto = _authService.CheckTokens(tokenDto);
             var accessToken = _tokenService.GenerateAccessToken(userDto);
             var refreshToken = _tokenService.GenerateRefreshToken();
-            var NewTokenDto = new TokenDto()
+            var newTokenDto = new TokenDto()
             {
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             };
-            _authService.SaveRefreshTokenData(userDto, NewTokenDto);
+            _authService.SaveRefreshTokenData(userDto, newTokenDto);
 
-            return Ok(NewTokenDto);
+            return Ok(newTokenDto);
         }
     }
 }

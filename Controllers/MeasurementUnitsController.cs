@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers
 {
-    [Route("api/measurement-units")]
+    [Route("api/v1/measurement-units")]
     [ApiController]
     [Authorize]
     public class MeasurementUnitsController : ControllerBase
@@ -18,8 +18,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var items = _measurementUnitService.GetAll();
-            return Ok(items);
+            var measurementUnitDtos = _measurementUnitService.GetAll();
+            return Ok(measurementUnitDtos);
         }
     }
 }

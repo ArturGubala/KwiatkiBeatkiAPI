@@ -84,11 +84,11 @@ var seeder = scope.ServiceProvider.GetRequiredService<ISeederService>();
 seeder.Seed();
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
-if (app.Environment.IsDevelopment())
-{
+//if (app.Environment.IsDevelopment())
+//{
     app.UseSwagger();
     app.UseSwaggerUI();
-}
+//}
 app.UseAuthentication();
 app.UseHttpsRedirection();
 app.UseSwagger();

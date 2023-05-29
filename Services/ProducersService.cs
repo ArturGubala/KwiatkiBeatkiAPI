@@ -37,7 +37,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .FirstOrDefault(i => i.Id == id);
 
             if (producerEntity is null)
-                throw new NotFoundException("Producent nie został odnaleziony.");
+                throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
 
             var producerDto = _mapper.Map<ProducerDto>(producerEntity);
 
@@ -59,7 +59,7 @@ namespace KwiatkiBeatkiAPI.Services
             var producerToDelete = _kwiatkiBeatkiDbContext.Producer.FirstOrDefault(i => i.Id == id);
 
             if (producerToDelete == null)
-                throw new NotFoundException("Producent nie został odnaleziony.");
+                throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.Producer.Remove(producerToDelete);
             _kwiatkiBeatkiDbContext.SaveChanges();
@@ -70,7 +70,7 @@ namespace KwiatkiBeatkiAPI.Services
             var producerToUpdate = _kwiatkiBeatkiDbContext.Producer.FirstOrDefault(i => i.Id == id);
 
             if (producerToUpdate == null)
-                throw new NotFoundException("Producent nie został odnaleziony.");
+                throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
 
             producerToUpdate.Name = createUpdateProducerDto.Name;
             producerToUpdate.PhoneNumber = createUpdateProducerDto.PhoneNumber;

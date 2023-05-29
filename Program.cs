@@ -15,6 +15,8 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using KwiatkiBeatkiAPI.Models.Response;
+using Microsoft.AspNetCore.Mvc;
 
 var autenticationSettings = new AutenticationSettings();
 var databaseInfo = new DatabaseInfo();
@@ -48,7 +50,30 @@ builder.Services.AddAuthentication(option =>
 
 // Add services to the container.
 builder.Services.AddTransient<ISeederService, SeederService>();
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.InvalidModelStateResponseFactory = context =>
+        {
+            var validationErrors = context.ModelState
+                .Where(e => e.Value.Errors.Any())
+                .ToDictionary(
+                    e => e.Key,
+                    e => e.Value.Errors.Select(x => x.ErrorMessage).ToArray()
+                );
+
+            var response = new ValidationErrorResponse
+            {
+                Message = "Validation errors occurred.",
+                Errors = validationErrors
+            };
+
+            return new ObjectResult(response)
+            {
+                StatusCode = StatusCodes.Status422UnprocessableEntity
+            };
+        };
+    });
 builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
 builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 builder.Services.AddFluentValidationRulesToSwagger();

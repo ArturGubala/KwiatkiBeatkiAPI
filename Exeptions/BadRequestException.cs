@@ -1,11 +1,11 @@
 ﻿namespace KwiatkiBeatkiAPI.Exeptions
 {
-    public class BadRequestException : Exception
+    public class BadRequestException : BaseException
     {
-        public BadRequestException(string message) : base(message)
+        public BadRequestException(string code, string message) : base(code, message)
         {
         }
-        public BadRequestException(string message, Exception inner) : base(message, inner)
+        public BadRequestException(string code, string message, Exception inner) : base(code, message, inner)
         {
         }
     }

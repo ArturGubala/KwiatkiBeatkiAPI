@@ -1,4 +1,7 @@
 ﻿using KwiatkiBeatkiAPI.Exeptions;
+using KwiatkiBeatkiAPI.Models.Response;
+using System.Net;
+using System.Text.Json;
 
 namespace KwiatkiBeatkiAPI.Middleware
 {
@@ -19,14 +22,18 @@ namespace KwiatkiBeatkiAPI.Middleware
             catch (BadRequestException badRequestException)
             {
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
-                if (badRequestException.InnerException != null)
-                    _logger.LogError(badRequestException.InnerException.ToString(), badRequestException.InnerException.Message);
-                await context.Response.WriteAsync(badRequestException.Message);
+                context.Response.ContentType = "application/json";
+                ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", badRequestException);
+                //if (badRequestException.InnerException != null)
+                //    _logger.LogError(badRequestException.InnerException.ToString(), badRequestException.InnerException.Message);
+                await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (NotFoundException notFoundException)
             {
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
-                await context.Response.WriteAsync(notFoundException.Message);
+                context.Response.ContentType = "application/json";
+                ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", notFoundException);
+                await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (Exception ex)
             {
@@ -35,6 +42,22 @@ namespace KwiatkiBeatkiAPI.Middleware
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
                 await context.Response.WriteAsync("Something went wrong");
             }
+        }
+
+        private ValidationErrorResponse CreateErrorResponse(string responseMessage, BaseException exeption)
+        {
+            var validationErrors = new Dictionary<string, string[]>
+                {
+                    { exeption.Code, new[] { exeption.Message } }
+                };
+
+            var response = new ValidationErrorResponse
+            {
+                Message = responseMessage,
+                Errors = validationErrors
+            };
+
+            return response;
         }
     }
 }

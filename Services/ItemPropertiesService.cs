@@ -39,7 +39,7 @@ namespace KwiatkiBeatkiAPI.Services
             var itemPropertyToDelete = _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefault(i => i.Id == id);
 
             if (itemPropertyToDelete == null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.ItemProperty.Remove(itemPropertyToDelete);
             _kwiatkiBeatkiDbContext.SaveChanges();
@@ -50,7 +50,7 @@ namespace KwiatkiBeatkiAPI.Services
             var itemPropertyToUpdate = _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefault(i => i.Id == id);
 
             if (itemPropertyToUpdate == null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             itemPropertyToUpdate.Value = updateItemPropertyDto.Value;
 

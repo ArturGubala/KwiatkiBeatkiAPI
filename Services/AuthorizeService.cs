@@ -37,11 +37,11 @@ namespace KwiatkiBeatkiAPI.Services
                 .Include(u => u.Role)
                 .FirstOrDefault(u => u.Email == authDto.Email);
             if (user == null)
-                throw new BadRequestException("Invalid username or password");
+                throw new BadRequestException("Login", "Invalid username or password");
 
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user, user.PasswordHash, authDto.Password);
             if (passwordVerificationResult == PasswordVerificationResult.Failed)
-                throw new BadRequestException("Invalid username or password");
+                throw new BadRequestException("Login", "Invalid username or password");
 
             UserDto userDto = _mapper.Map<UserDto>(user);
 
@@ -60,7 +60,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .Include(u => u.Role)
                 .FirstOrDefault(u => u.Id == userId);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-                throw new BadRequestException("Invalid client request");
+                throw new BadRequestException("Login", "Invalid client request");
 
             UserDto userDto = _mapper.Map<UserDto>(user);
 
@@ -72,7 +72,7 @@ namespace KwiatkiBeatkiAPI.Services
             var user = _kwiatkiBeatkiDbContext.User.SingleOrDefault(u => u.Id == userDto.Id);
 
             if (user == null)
-                throw new BadRequestException("Invalid client request");
+                throw new BadRequestException("Login", "Invalid client request");
 
             user.RefreshToken = tokenDto.RefreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);

@@ -3,8 +3,6 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.User;
 using KwiatkiBeatkiAPI.Exeptions;
 using KwiatkiBeatkiAPI.Models.User;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -33,7 +31,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .FirstOrDefault(u => u.Id == loggedUserId);
 
             if (userEntity == null)
-                throw new NotFoundException("User not found");
+                throw new NotFoundException("UserId", $"User was not found");
 
             UserDto userDto = _mapper.Map<UserDto>(userEntity);
 

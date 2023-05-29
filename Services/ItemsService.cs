@@ -55,7 +55,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemEntity is null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             var itemDto = _mapper.Map<ItemDto>(itemEntity);
 
@@ -77,7 +77,7 @@ namespace KwiatkiBeatkiAPI.Services
             var itemToDelete = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemToDelete == null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.Item.Remove(itemToDelete);
             await _kwiatkiBeatkiDbContext.SaveChangesAsync();
@@ -88,7 +88,7 @@ namespace KwiatkiBeatkiAPI.Services
             var itemToUpdate = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemToUpdate == null)
-                throw new NotFoundException("Item not found");
+                throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             itemToUpdate.ItemTypeId = createUpdateItemDto.ItemTypeId;
             itemToUpdate.BulkPackId = createUpdateItemDto.BulkPackId;

@@ -5,6 +5,7 @@ using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Models.Document;
 using KwiatkiBeatkiAPI.Exeptions;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -61,7 +62,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .FirstOrDefault(d => d.Id == documentId);
 
             if (documentEntity is null)
-                throw new NotFoundException("Document not found");
+                throw new NotFoundException("DocumentId", $"Document with ID: {documentId} was not found");
 
             var documentDto = _mapper.Map<DocumentDto>(documentEntity);
 
@@ -90,7 +91,7 @@ namespace KwiatkiBeatkiAPI.Services
             catch (Exception ex)
             {
                 _kwiatkiBeatkiDbContext.Database.RollbackTransaction();
-                throw new BadRequestException("Error while adding document", ex);
+                throw new BadRequestException("Document", "Error while adding document", ex);
             }
 
             return documentEntity.Id;
@@ -100,7 +101,7 @@ namespace KwiatkiBeatkiAPI.Services
             var documentToUpdate = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
 
             if (documentToUpdate == null)
-                throw new NotFoundException("Document not found");
+                throw new NotFoundException("DocumentId", $"Document with ID: {id} was not found");
 
             documentToUpdate.Remarks = updateDocumentDto.Remarks;
 
@@ -111,7 +112,7 @@ namespace KwiatkiBeatkiAPI.Services
             var documentToDelete = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
 
             if (documentToDelete == null)
-                throw new NotFoundException("Document not found");
+                throw new NotFoundException("DocumentId", $"Document with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.Document.Remove(documentToDelete);
             _kwiatkiBeatkiDbContext.SaveChanges();

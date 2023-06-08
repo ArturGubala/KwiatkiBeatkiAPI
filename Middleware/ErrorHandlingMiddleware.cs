@@ -1,6 +1,5 @@
 ﻿using KwiatkiBeatkiAPI.Exeptions;
 using KwiatkiBeatkiAPI.Models.Response;
-using System.Net;
 using System.Text.Json;
 
 namespace KwiatkiBeatkiAPI.Middleware
@@ -33,6 +32,16 @@ namespace KwiatkiBeatkiAPI.Middleware
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", notFoundException);
+                await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
+            }
+            catch (UnprocessableContentException unprocessableContentException)
+            {
+                _logger.LogError("Test");
+                if (unprocessableContentException.InnerException != null)
+                    _logger.LogInformation(unprocessableContentException.InnerException.ToString(), unprocessableContentException.InnerException.Message);
+                context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
+                context.Response.ContentType = "application/json";
+                ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", unprocessableContentException);
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (Exception ex)

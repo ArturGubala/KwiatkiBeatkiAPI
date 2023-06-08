@@ -3,6 +3,8 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Exeptions;
 using KwiatkiBeatkiAPI.Models.Item;
+using KwiatkiBeatkiAPI.Utils;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
@@ -67,7 +69,29 @@ namespace KwiatkiBeatkiAPI.Services
             var itemEntity = _mapper.Map<ItemEntity>(createUpdateItemDto);
 
             _kwiatkiBeatkiDbContext.Item.Add(itemEntity);
-            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
+            try
+            {
+                await _kwiatkiBeatkiDbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException is SqlException sqlException)
+                {
+                    if (sqlException.Number == (short)RegexUtils.RegexTypes.CodeFromSqlExMessage)
+                    {
+                        string? code = string.Empty; 
+                        string? value = string.Empty;
+                        RegexUtils.Patterns.TryGetValue((short)RegexUtils.RegexTypes.CodeFromSqlExMessage, out Patterns? patterns);
+                        if (patterns != null)
+                        {
+                            code = RegexUtils.GetValueByPattern(patterns.CodePattern, sqlException.Message).Split('_').Last();
+                            value = RegexUtils.GetValueByPattern(patterns.ValuePattern, sqlException.Message);
+                        }
+
+                        throw new UnprocessableContentException(code, $"Pole musi być unikatowe, istnieje już wpis z wartością [{value}]", sqlException);
+                    }
+                }
+            }
 
             return itemEntity.Id;
         }

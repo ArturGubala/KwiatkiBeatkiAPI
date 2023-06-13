@@ -20,40 +20,31 @@ namespace KwiatkiBeatkiAPI.Middleware
             }
             catch (BadRequestException badRequestException)
             {
+                _logger.LogError($"Exeption message: [{badRequestException.Message}] | Inner exception message: [{badRequestException.InnerException?.Message ?? string.Empty}]" ); 
+
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", badRequestException);
-
-                if (badRequestException.InnerException != null)
-                {
-                    _logger.LogError(badRequestException.InnerException.Message);
-                }
 
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (NotFoundException notFoundException)
             {
+                _logger.LogError($"Exeption message: [{notFoundException.Message}] | Inner exception message: [{notFoundException.InnerException?.Message ?? string.Empty}]");
+
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", notFoundException);
-
-                if (notFoundException.InnerException != null)
-                {
-                    _logger.LogError(notFoundException.InnerException.Message);
-                }
 
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (UnprocessableContentException unprocessableContentException)
             {
+                _logger.LogError($"Exeption message: [{unprocessableContentException.Message}] | Inner exception message: [{unprocessableContentException.InnerException?.Message ?? string.Empty}]");
+
                 context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", unprocessableContentException);
-
-                if (unprocessableContentException.InnerException != null)
-                {
-                    _logger.LogError(unprocessableContentException.InnerException.Message);
-                }
 
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
@@ -62,15 +53,21 @@ namespace KwiatkiBeatkiAPI.Middleware
                 _logger.LogError(ex, ex.Message);
 
                 context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                await context.Response.WriteAsync("Something went wrong");
+                context.Response.ContentType = "application/json";
+                ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured");
+
+                await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
         }
 
-        private ValidationErrorResponse CreateErrorResponse(string responseMessage, BaseException exeption)
+        private ValidationErrorResponse CreateErrorResponse(string responseMessage, BaseException? excption = null)
         {
             var validationErrors = new Dictionary<string, string[]>
                 {
-                    { exeption.Code, new[] { exeption.Message } }
+                    { 
+                        excption?.Code ?? "Wewnętrzny błąd", 
+                        new[] { excption?.Message ?? "Należy zgłosić problem do admisistratora aplikacji" } 
+                    }
                 };
 
             var response = new ValidationErrorResponse

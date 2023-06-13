@@ -23,8 +23,12 @@ namespace KwiatkiBeatkiAPI.Middleware
                 context.Response.StatusCode = StatusCodes.Status400BadRequest;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", badRequestException);
-                //if (badRequestException.InnerException != null)
-                //    _logger.LogError(badRequestException.InnerException.ToString(), badRequestException.InnerException.Message);
+
+                if (badRequestException.InnerException != null)
+                {
+                    _logger.LogError(badRequestException.InnerException.Message);
+                }
+
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (NotFoundException notFoundException)
@@ -32,16 +36,25 @@ namespace KwiatkiBeatkiAPI.Middleware
                 context.Response.StatusCode = StatusCodes.Status404NotFound;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", notFoundException);
+
+                if (notFoundException.InnerException != null)
+                {
+                    _logger.LogError(notFoundException.InnerException.Message);
+                }
+
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (UnprocessableContentException unprocessableContentException)
             {
-                _logger.LogError("Test");
-                if (unprocessableContentException.InnerException != null)
-                    _logger.LogInformation(unprocessableContentException.InnerException.ToString(), unprocessableContentException.InnerException.Message);
                 context.Response.StatusCode = StatusCodes.Status422UnprocessableEntity;
                 context.Response.ContentType = "application/json";
                 ValidationErrorResponse validationErrorResponse = CreateErrorResponse("Error was occured", unprocessableContentException);
+
+                if (unprocessableContentException.InnerException != null)
+                {
+                    _logger.LogError(unprocessableContentException.InnerException.Message);
+                }
+
                 await context.Response.WriteAsync(JsonSerializer.Serialize(validationErrorResponse));
             }
             catch (Exception ex)

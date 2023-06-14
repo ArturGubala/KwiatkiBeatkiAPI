@@ -71,7 +71,7 @@ try
 
                 return new ObjectResult(response)
                 {
-                    StatusCode = StatusCodes.Status422UnprocessableEntity
+                    StatusCode = StatusCodes.Status400BadRequest
                 };
             };
         });

@@ -1,5 +1,4 @@
 ﻿using KwiatkiBeatkiAPI.Models.Authorization;
-using KwiatkiBeatkiAPI.Models.User;
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,9 +18,9 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Post([FromBody] AuthDto authDto)
+        public async Task<IActionResult> Post([FromBody] AuthDto authDto)
         {
-            var userDto = _authService.Login(authDto);
+            var userDto = await _authService.LoginAsync(authDto);
             var accessToken = _tokenService.GenerateAccessToken(userDto);
             var refreshToken = _tokenService.GenerateRefreshToken();
             var tokenDto = new TokenDto()
@@ -29,16 +28,16 @@ namespace KwiatkiBeatkiAPI.Controllers
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             };
-            _authService.SaveRefreshTokenData(userDto, tokenDto);
+            await _authService.SaveRefreshTokenDataAsync(userDto, tokenDto);
 
             return Ok(tokenDto);
         }
 
         [HttpPost]
         [Route("refresh")]
-        public IActionResult Post([FromBody]TokenDto tokenDto)
+        public async Task<IActionResult> Post([FromBody]TokenDto tokenDto)
         {
-            var userDto = _authService.CheckTokens(tokenDto);
+            var userDto = await _authService.CheckTokensAsync(tokenDto);
             var accessToken = _tokenService.GenerateAccessToken(userDto);
             var refreshToken = _tokenService.GenerateRefreshToken();
             var newTokenDto = new TokenDto()
@@ -46,7 +45,7 @@ namespace KwiatkiBeatkiAPI.Controllers
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
             };
-            _authService.SaveRefreshTokenData(userDto, newTokenDto);
+            await _authService.SaveRefreshTokenDataAsync(userDto, newTokenDto);
 
             return Ok(newTokenDto);
         }

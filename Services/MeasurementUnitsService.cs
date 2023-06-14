@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Models.MeasurementUnit;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IMeasurementUnitsService
     {
-        IEnumerable<MeasurementUnitDto> GetAll();
+        Task<IEnumerable<MeasurementUnitDto>> GetAsync();
     }
     public class MeasurementUnitsService : IMeasurementUnitsService
     {
@@ -17,9 +18,9 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _mapper = mapper;
         }
-        public IEnumerable<MeasurementUnitDto> GetAll()
+        public async Task<IEnumerable<MeasurementUnitDto>> GetAsync()
         {
-            var measurementUnitEntities = _kwiatkiBeatkiDbContext.MeasurementUnit.ToList();
+            var measurementUnitEntities = await _kwiatkiBeatkiDbContext.MeasurementUnit.ToListAsync();
             var measurementUnitDtos = _mapper.Map<IEnumerable<MeasurementUnitDto>>(measurementUnitEntities);
 
             return measurementUnitDtos;

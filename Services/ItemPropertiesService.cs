@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
 using KwiatkiBeatkiAPI.DatabaseContext;
-using KwiatkiBeatkiAPI.Entities.Item;
 using KwiatkiBeatkiAPI.Entities.ItemProperty;
 using KwiatkiBeatkiAPI.Exeptions;
-using KwiatkiBeatkiAPI.Models.Item;
 using KwiatkiBeatkiAPI.Models.ItemProperty;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IItemPropertiesService
     {
-        int CreateItemProperty(int itemId, CreateItemPropertyDto createItemPropertyDto);
-        void UpdateItemProperty(int id, UpdateItemPropertyDto updateItemPropertyDto);
-        void DeleteItemProperty(int id);
+        Task<int> CreateAsync(int itemId, CreateItemPropertyDto createItemPropertyDto);
+        Task UpdateAsync(int id, UpdateItemPropertyDto updateItemPropertyDto);
+        Task DeleteAsync(int id);
     }
     public class ItemPropertiesService : IItemPropertiesService
     {
@@ -23,38 +22,38 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _mapper = mapper;
         }
-        public int CreateItemProperty(int itemId, CreateItemPropertyDto createItemPropertyDto)
+        public async Task<int> CreateAsync(int itemId, CreateItemPropertyDto createItemPropertyDto)
         {
             var itemPropertyEntity = _mapper.Map<ItemPropertyEntity>(createItemPropertyDto);
             itemPropertyEntity.ItemId = itemId;
 
-            _kwiatkiBeatkiDbContext.ItemProperty.Add(itemPropertyEntity);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.ItemProperty.AddAsync(itemPropertyEntity);
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
 
             return itemPropertyEntity.Id;
         }
 
-        public void DeleteItemProperty(int id)
+        public async Task DeleteAsync(int id)
         {
-            var itemPropertyToDelete = _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefault(i => i.Id == id);
+            var itemPropertyToDelete = await _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemPropertyToDelete == null)
                 throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.ItemProperty.Remove(itemPropertyToDelete);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
 
-        public void UpdateItemProperty(int id, UpdateItemPropertyDto updateItemPropertyDto)
+        public async Task UpdateAsync(int id, UpdateItemPropertyDto updateItemPropertyDto)
         {
-            var itemPropertyToUpdate = _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefault(i => i.Id == id);
+            var itemPropertyToUpdate = await _kwiatkiBeatkiDbContext.ItemProperty.FirstOrDefaultAsync(i => i.Id == id);
 
             if (itemPropertyToUpdate == null)
                 throw new NotFoundException("ItemId", $"Item with ID: {id} was not found");
 
             itemPropertyToUpdate.Value = updateItemPropertyDto.Value;
 
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
     }
 }

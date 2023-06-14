@@ -3,16 +3,17 @@ using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Entities.Producer;
 using KwiatkiBeatkiAPI.Exeptions;
 using KwiatkiBeatkiAPI.Models.Producer;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IProducersService
     {
-        IEnumerable<ProducerDto> GetAll();
-        ProducerDto GetById(int id);
-        int CreateProducer(CreateUpdateProducerDto createUpdateProducerDto);
-        void UpdateProducer(int id, CreateUpdateProducerDto createUpdateProducerDto);
-        void DeleteProducer(int id);
+        Task<IEnumerable<ProducerDto>> GetAsync();
+        Task<ProducerDto> GetAsync(int id);
+        Task<int> CreateAsync(CreateUpdateProducerDto createUpdateProducerDto);
+        Task UpdateAsync(int id, CreateUpdateProducerDto createUpdateProducerDto);
+        Task DeleteAsync(int id);
     }
     public class ProducersService : IProducersService
     {
@@ -23,18 +24,18 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _mapper = mapper;
         }
-        public IEnumerable<ProducerDto> GetAll()
+        public async Task<IEnumerable<ProducerDto>> GetAsync()
         {
-            var producerEntities = _kwiatkiBeatkiDbContext.Producer.ToList();
+            var producerEntities = await _kwiatkiBeatkiDbContext.Producer.ToListAsync();
             var producerDtos = _mapper.Map<IEnumerable<ProducerDto>>(producerEntities);
 
             return producerDtos;
         }
 
-        public ProducerDto GetById(int id)
+        public async Task<ProducerDto> GetAsync(int id)
         {
-            var producerEntity = _kwiatkiBeatkiDbContext.Producer
-                .FirstOrDefault(i => i.Id == id);
+            var producerEntity = await _kwiatkiBeatkiDbContext.Producer
+                .FirstOrDefaultAsync(i => i.Id == id);
 
             if (producerEntity is null)
                 throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
@@ -44,30 +45,30 @@ namespace KwiatkiBeatkiAPI.Services
             return producerDto;
         }
 
-        public int CreateProducer(CreateUpdateProducerDto createUpdateProducerDto)
+        public async Task<int> CreateAsync(CreateUpdateProducerDto createUpdateProducerDto)
         {
             var producerEntity = _mapper.Map<ProducerEntity>(createUpdateProducerDto);
 
-            _kwiatkiBeatkiDbContext.Producer.Add(producerEntity);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.Producer.AddAsync(producerEntity);
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
 
             return producerEntity.Id;
         }
 
-        public void DeleteProducer(int id)
+        public async Task DeleteAsync(int id)
         {
-            var producerToDelete = _kwiatkiBeatkiDbContext.Producer.FirstOrDefault(i => i.Id == id);
+            var producerToDelete = await _kwiatkiBeatkiDbContext.Producer.FirstOrDefaultAsync(i => i.Id == id);
 
             if (producerToDelete == null)
                 throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.Producer.Remove(producerToDelete);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
 
-        public void UpdateProducer(int id, CreateUpdateProducerDto createUpdateProducerDto)
+        public async Task UpdateAsync(int id, CreateUpdateProducerDto createUpdateProducerDto)
         {
-            var producerToUpdate = _kwiatkiBeatkiDbContext.Producer.FirstOrDefault(i => i.Id == id);
+            var producerToUpdate = await _kwiatkiBeatkiDbContext.Producer.FirstOrDefaultAsync(i => i.Id == id);
 
             if (producerToUpdate == null)
                 throw new NotFoundException("ProducerId", $"Producer with ID: {id} was not found");
@@ -77,7 +78,7 @@ namespace KwiatkiBeatkiAPI.Services
             producerToUpdate.Email = createUpdateProducerDto.Email;
             producerToUpdate.Website = createUpdateProducerDto.Website;
 
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
     }
 }

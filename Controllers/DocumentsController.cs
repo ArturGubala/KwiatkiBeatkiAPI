@@ -18,40 +18,40 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var documentDtos = _documentsService.GetAll();
+            var documentDtos = await _documentsService.GetAsync();
             return Ok(documentDtos);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult Get([FromRoute] int id) 
+        public async Task<IActionResult> Get([FromRoute] int id) 
         { 
-            var documentDto = _documentsService.GetById(id);
+            var documentDto = await _documentsService.GetAsync(id);
             return Ok(documentDto);
         }
         
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Post([FromBody] CreateDocumentDto createDocumentDto)
+        public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)
         {
-            var createdDocumentId = _documentsService.CreateDocument(createDocumentDto);
+            var createdDocumentId = await _documentsService.CreateAsync(createDocumentDto);
             return Created($"api/v1/documents/{createdDocumentId}", null);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            _documentsService.DeleteDocument(id);
+            await _documentsService.DeleteAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Put([FromRoute] int id, [FromBody] UpdateDocumentDto updateDocumentDto)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateDocumentDto updateDocumentDto)
         {
-            _documentsService.UpdateDocument(id, updateDocumentDto);
+            await _documentsService.UpdateAsync(id, updateDocumentDto);
             return NoContent();
         }
     }

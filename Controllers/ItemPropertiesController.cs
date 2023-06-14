@@ -18,25 +18,25 @@ namespace KwiatkiBeatkiAPI.Controllers
 
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Post([FromRoute] int itemId, [FromBody] CreateItemPropertyDto createItemPropertyDto)
+        public async Task<IActionResult> Post([FromRoute] int itemId, [FromBody] CreateItemPropertyDto createItemPropertyDto)
         {
-            var createdItemPropertyId = _itemPropertyiesService.CreateItemProperty(itemId, createItemPropertyDto);
+            var createdItemPropertyId = await _itemPropertyiesService.CreateAsync(itemId, createItemPropertyDto);
             return Created($"api/v1/items/{itemId}/properties/{createdItemPropertyId}", null);
         }
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            _itemPropertyiesService.DeleteItemProperty(id);
+            await _itemPropertyiesService.DeleteAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public IActionResult Put([FromRoute] int id, [FromBody] UpdateItemPropertyDto updateItemPropertyDto)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateItemPropertyDto updateItemPropertyDto)
         {
-            _itemPropertyiesService.UpdateItemProperty(id, updateItemPropertyDto);
+            await _itemPropertyiesService.UpdateAsync(id, updateItemPropertyDto);
             return NoContent();
         }
     }

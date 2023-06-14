@@ -10,7 +10,7 @@ namespace KwiatkiBeatkiAPI.Services
 {
     public interface IUsersService
     {
-        UserDto GetLoggedUser();
+        Task<UserDto> GetSignInUserAsync();
     }
     public class UsersService : IUsersService
     {
@@ -23,12 +23,12 @@ namespace KwiatkiBeatkiAPI.Services
             _mapper = mapper;
             _userContextService = userContextService;
         }
-        public UserDto GetLoggedUser()
+        public async Task<UserDto> GetSignInUserAsync()
         {
-            int loggedUserId = int.Parse(_userContextService.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            UserEntity? userEntity = _kwiatkiBeatkiDbContext.User
+            int loggedUserId = int.Parse(_userContextService.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);
+            UserEntity? userEntity = await _kwiatkiBeatkiDbContext.User
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Id == loggedUserId);
+                .FirstOrDefaultAsync(u => u.Id == loggedUserId);
 
             if (userEntity == null)
                 throw new NotFoundException("UserId", $"User was not found");
@@ -36,7 +36,6 @@ namespace KwiatkiBeatkiAPI.Services
             UserDto userDto = _mapper.Map<UserDto>(userEntity);
 
             return userDto;
-            
         }
     }
 }

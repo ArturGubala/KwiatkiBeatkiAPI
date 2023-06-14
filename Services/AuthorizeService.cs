@@ -12,9 +12,9 @@ namespace KwiatkiBeatkiAPI.Services
 {
     public interface IAuthService
     {
-        UserDto Login(AuthDto authDto);
-        void SaveRefreshTokenData(UserDto userDto, TokenDto tokenDto);
-        UserDto CheckTokens(TokenDto tokenDto);
+        Task<UserDto> LoginAsync(AuthDto authDto);
+        Task SaveRefreshTokenDataAsync(UserDto userDto, TokenDto tokenDto);
+        Task<UserDto> CheckTokensAsync(TokenDto tokenDto);
     }
     public class AuthorizeService : IAuthService
     {
@@ -31,11 +31,11 @@ namespace KwiatkiBeatkiAPI.Services
             _mapper = mapper;
             _tokenService = tokenService;
         }
-        public UserDto Login(AuthDto authDto)
+        public async Task<UserDto> LoginAsync(AuthDto authDto)
         {
-            var user = _kwiatkiBeatkiDbContext.User
+            var user = await _kwiatkiBeatkiDbContext.User
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Email == authDto.Email);
+                .FirstOrDefaultAsync(u => u.Email == authDto.Email);
             if (user == null)
                 throw new BadRequestException("Login", "Invalid username or password");
 
@@ -48,17 +48,17 @@ namespace KwiatkiBeatkiAPI.Services
             return userDto;
         }
 
-        public UserDto CheckTokens(TokenDto tokenDto)
+        public async Task<UserDto> CheckTokensAsync(TokenDto tokenDto)
         {
             string? accessToken = tokenDto.AccessToken;
             string? refreshToken = tokenDto.RefreshToken;
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
 
-            var userId = int.Parse(principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
-            var user = _kwiatkiBeatkiDbContext.User
+            int userId = int.Parse(principal.FindFirst(c => c.Type == ClaimTypes.NameIdentifier).Value);
+            var user = await _kwiatkiBeatkiDbContext.User
                 .Include(u => u.Role)
-                .FirstOrDefault(u => u.Id == userId);
+                .FirstOrDefaultAsync(u => u.Id == userId);
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 throw new BadRequestException("Login", "Invalid client request");
 
@@ -67,9 +67,9 @@ namespace KwiatkiBeatkiAPI.Services
             return userDto;
         }
 
-        public void SaveRefreshTokenData(UserDto userDto, TokenDto tokenDto)
+        public async Task SaveRefreshTokenDataAsync(UserDto userDto, TokenDto tokenDto)
         {
-            var user = _kwiatkiBeatkiDbContext.User.SingleOrDefault(u => u.Id == userDto.Id);
+            var user = await _kwiatkiBeatkiDbContext.User.SingleOrDefaultAsync(u => u.Id == userDto.Id);
 
             if (user == null)
                 throw new BadRequestException("Login", "Invalid client request");

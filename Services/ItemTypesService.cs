@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Models.ItemType;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IItemTypesService
     {
-        IEnumerable<ItemTypeDto> GetAll();
+        Task<IEnumerable<ItemTypeDto>> GetAsync();
     }
     public class ItemTypesService : IItemTypesService
     {
@@ -17,9 +18,9 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _mapper = mapper;
         }
-        public IEnumerable<ItemTypeDto> GetAll()
+        public async Task<IEnumerable<ItemTypeDto>> GetAsync()
         {
-            var itemTypeEntities = _kwiatkiBeatkiDbContext.ItemType.ToList();
+            var itemTypeEntities = await _kwiatkiBeatkiDbContext.ItemType.ToListAsync();
             var itemTypeDtos = _mapper.Map<IEnumerable<ItemTypeDto>>(itemTypeEntities);
 
             return itemTypeDtos;

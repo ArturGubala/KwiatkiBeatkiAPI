@@ -17,37 +17,37 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var producerDtos = _producerService.GetAll();
+            var producerDtos = await _producerService.GetAsync();
             return Ok(producerDtos);
         }
 
         [HttpGet("{id:int}")]
-        public IActionResult Get([FromRoute] int id)
+        public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var producerDto = _producerService.GetById(id);
+            var producerDto = await _producerService.GetAsync(id);
             return Ok(producerDto);
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateUpdateProducerDto createUpdateProducerDto)
+        public async Task<IActionResult> Post([FromBody] CreateUpdateProducerDto createUpdateProducerDto)
         {
-            var createdProducerId = _producerService.CreateProducer(createUpdateProducerDto);
+            var createdProducerId = await _producerService.CreateAsync(createUpdateProducerDto);
             return Created($"api/v1/producers/{createdProducerId}", null);
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _producerService.DeleteProducer(id);
+            await _producerService.DeleteAsync(id);
             return NoContent();
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult Put([FromRoute] int id, [FromBody] CreateUpdateProducerDto createUpdateProducerDto)
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CreateUpdateProducerDto createUpdateProducerDto)
         {
-            _producerService.UpdateProducer(id, createUpdateProducerDto);
+            await _producerService.UpdateAsync(id, createUpdateProducerDto);
             return NoContent();
         }
     }

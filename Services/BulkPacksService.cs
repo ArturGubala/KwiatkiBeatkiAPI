@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using KwiatkiBeatkiAPI.DatabaseContext;
 using KwiatkiBeatkiAPI.Models.BulkPack;
+using Microsoft.EntityFrameworkCore;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IBulkPacksService
     {
-        IEnumerable<BulkPackDto> GetAll();
+        Task<IEnumerable<BulkPackDto>> GetAsync();
     }
     public class BulkPacksService : IBulkPacksService
     {
@@ -17,9 +18,9 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
             _mapper = mapper;
         }
-        public IEnumerable<BulkPackDto> GetAll()
+        public async Task<IEnumerable<BulkPackDto>> GetAsync()
         {
-            var bulkPacksEntities = _kwiatkiBeatkiDbContext.BulkPack.ToList();
+            var bulkPacksEntities = await _kwiatkiBeatkiDbContext.BulkPack.ToListAsync();
             var bulkPacksDtos = _mapper.Map<IEnumerable<BulkPackDto>>(bulkPacksEntities);
 
             return bulkPacksDtos;

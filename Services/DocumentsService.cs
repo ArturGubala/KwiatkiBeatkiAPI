@@ -5,17 +5,16 @@ using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Models.Document;
 using KwiatkiBeatkiAPI.Exeptions;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Metadata;
 
 namespace KwiatkiBeatkiAPI.Services
 {
     public interface IDocumentsService
     {
-        IEnumerable<DocumentDto> GetAll();
-        DocumentDto GetById(int documentId);
-        int CreateDocument(CreateDocumentDto createDocumentDto);
-        void UpdateDocument(int id, UpdateDocumentDto updateDocumentDto);
-        void DeleteDocument(int documentId);
+        Task<IEnumerable<DocumentDto>> GetAsync();
+        Task<DocumentDto> GetAsync(int documentId);
+        Task<int> CreateAsync(CreateDocumentDto createDocumentDto);
+        Task UpdateAsync(int id, UpdateDocumentDto updateDocumentDto);
+        Task DeleteAsync(int documentId);
     }
     public class DocumentsService : IDocumentsService
     {
@@ -28,9 +27,9 @@ namespace KwiatkiBeatkiAPI.Services
             _mapper = mapper;
             _userContextService = userContextService;
         }
-        public IEnumerable<DocumentDto> GetAll()
+        public async Task<IEnumerable<DocumentDto>> GetAsync()
         {
-            var documentEntities = _kwiatkiBeatkiDbContext.Document
+            var documentEntities = await _kwiatkiBeatkiDbContext.Document
                 .Include(i => i.DocumentType)
                 .Include(i => i.WarehouseFrom)
                 .Include(i => i.WarehouseTo)
@@ -40,16 +39,16 @@ namespace KwiatkiBeatkiAPI.Services
                 .Include(i => i.Lines)
                     .ThenInclude(i => i.Item)
                         .ThenInclude(i => i.MeasurementUnit)
-                .ToList();
+                .ToListAsync();
 
             var documentDtos = _mapper.Map<IEnumerable<DocumentDto>>(documentEntities);
 
             return documentDtos;
         }
 
-        public DocumentDto GetById(int documentId)
+        public async Task<DocumentDto> GetAsync(int documentId)
         {
-            var documentEntity = _kwiatkiBeatkiDbContext.Document
+            var documentEntity = await _kwiatkiBeatkiDbContext.Document
                 .Include(i => i.DocumentType)
                 .Include(i => i.WarehouseFrom)
                 .Include(i => i.WarehouseTo)
@@ -59,7 +58,7 @@ namespace KwiatkiBeatkiAPI.Services
                 .Include(i => i.Lines)
                     .ThenInclude(i => i.Item)
                         .ThenInclude(i => i.MeasurementUnit)
-                .FirstOrDefault(d => d.Id == documentId);
+                .FirstOrDefaultAsync(d => d.Id == documentId);
 
             if (documentEntity is null)
                 throw new NotFoundException("DocumentId", $"Document with ID: {documentId} was not found");
@@ -69,84 +68,84 @@ namespace KwiatkiBeatkiAPI.Services
             return documentDto;
         }
 
-        public int CreateDocument(CreateDocumentDto createDocumentDto)
+        public async Task<int> CreateAsync(CreateDocumentDto createDocumentDto)
         {
-            var documentEntity = PrepareDocumentEntity(createDocumentDto);
+            var documentEntity = await PrepareDocumentEntityAsync(createDocumentDto);
             var lineEntities = _mapper.Map<IEnumerable<LineEntity>>(createDocumentDto.Lines);
 
-            _kwiatkiBeatkiDbContext.Database.BeginTransaction();
+            await _kwiatkiBeatkiDbContext.Database.BeginTransactionAsync();
 
             try
             {
-                _kwiatkiBeatkiDbContext.Document.Add(documentEntity);
-                _kwiatkiBeatkiDbContext.SaveChanges();
+                await _kwiatkiBeatkiDbContext.Document.AddAsync(documentEntity);
+                await _kwiatkiBeatkiDbContext.SaveChangesAsync();
 
                 foreach (var lineEntity in lineEntities)
                     lineEntity.DocumentId = documentEntity.Id;
 
-                _kwiatkiBeatkiDbContext.Line.AddRange(lineEntities);
-                _kwiatkiBeatkiDbContext.SaveChanges();
-                _kwiatkiBeatkiDbContext.Database.CommitTransaction();
+                await _kwiatkiBeatkiDbContext.Line.AddRangeAsync(lineEntities);
+                await _kwiatkiBeatkiDbContext.SaveChangesAsync();
+                await _kwiatkiBeatkiDbContext.Database.BeginTransactionAsync();
             }
             catch (Exception ex)
             {
-                _kwiatkiBeatkiDbContext.Database.RollbackTransaction();
+                await _kwiatkiBeatkiDbContext.Database.BeginTransactionAsync();
                 throw new BadRequestException("Document", "Error while adding document", ex);
             }
 
             return documentEntity.Id;
         }
-        public void UpdateDocument(int id, UpdateDocumentDto updateDocumentDto)
+        public async Task UpdateAsync(int id, UpdateDocumentDto updateDocumentDto)
         {
-            var documentToUpdate = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
+            var documentToUpdate = await _kwiatkiBeatkiDbContext.Document.FirstOrDefaultAsync(i => i.Id == id);
 
             if (documentToUpdate == null)
                 throw new NotFoundException("DocumentId", $"Document with ID: {id} was not found");
 
             documentToUpdate.Remarks = updateDocumentDto.Remarks;
 
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
-        public void DeleteDocument(int id)
+        public async Task DeleteAsync(int id)
         {
-            var documentToDelete = _kwiatkiBeatkiDbContext.Document.FirstOrDefault(i => i.Id == id);
+            var documentToDelete = await _kwiatkiBeatkiDbContext.Document.FirstOrDefaultAsync(i => i.Id == id);
 
             if (documentToDelete == null)
                 throw new NotFoundException("DocumentId", $"Document with ID: {id} was not found");
 
             _kwiatkiBeatkiDbContext.Document.Remove(documentToDelete);
-            _kwiatkiBeatkiDbContext.SaveChanges();
+            await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
-        private DocumentEntity PrepareDocumentEntity(CreateDocumentDto createDocumentDto)
+        private async Task<DocumentEntity> PrepareDocumentEntityAsync(CreateDocumentDto createDocumentDto)
         {
             var documentEntity = _mapper.Map<DocumentEntity>(createDocumentDto);
-            var lastDocumentNumber = GetLastDocumentNumber(createDocumentDto.DocumentTypeId);
-            var documentTypeAbbreviation = GetDocumentTypeAbbreviation(createDocumentDto.DocumentTypeId);
+            var lastDocumentNumber = await GetLastDocumentNumberAsync(createDocumentDto.DocumentTypeId);
+            var documentTypeAbbreviation = await GetDocumentTypeAbbreviationAsync(createDocumentDto.DocumentTypeId);
             var currentDocumentNumber = lastDocumentNumber + 1;
             var currentFullDocumentNumber = $"{currentDocumentNumber:D2}/{documentTypeAbbreviation}/{documentEntity.Created.ToString("MM")}/{documentEntity.Created.Year}";
 
             documentEntity.DocumentNumber = currentDocumentNumber;
             documentEntity.FullDocumentNumber = currentFullDocumentNumber;
-            documentEntity.UserId = (int)_userContextService.UserId;
+            documentEntity.UserId = (int)_userContextService.UserId!;
 
             return documentEntity;
         }
 
-        private int GetLastDocumentNumber(int documentTypeId)
+        private async Task<int> GetLastDocumentNumberAsync(int documentTypeId)
         {
             var currentDateTime = DateTime.Now;
-            var lastDocumentNumber = _kwiatkiBeatkiDbContext.Document
+            var lastDocumentNumber = await _kwiatkiBeatkiDbContext.Document
                 .Where(d => d.DocumentTypeId == documentTypeId && d.Created.Month == currentDateTime.Month && d.Created.Year == currentDateTime.Year)
                 .Select(d => d.DocumentNumber)
                 .DefaultIfEmpty()
-                .Max();
+                .MaxAsync();
 
             return lastDocumentNumber;
         }
 
-        private string GetDocumentTypeAbbreviation(int documentTypeId)
+        private async Task<string> GetDocumentTypeAbbreviationAsync(int documentTypeId)
         {
-            var documentTypeAbbreviation = _kwiatkiBeatkiDbContext.DocumentType.Where(d => d.Id == documentTypeId).Select(d => d.Abbreviation).First();
+            var documentTypeAbbreviation = await _kwiatkiBeatkiDbContext.DocumentType.Where(d => d.Id == documentTypeId).Select(d => d.Abbreviation).FirstAsync();
 
             return documentTypeAbbreviation;
         }

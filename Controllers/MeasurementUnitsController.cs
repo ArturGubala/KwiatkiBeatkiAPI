@@ -16,9 +16,9 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var measurementUnitDtos = _measurementUnitService.GetAll();
+            var measurementUnitDtos = await _measurementUnitService.GetAsync();
             return Ok(measurementUnitDtos);
         }
     }

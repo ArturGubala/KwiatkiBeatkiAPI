@@ -16,9 +16,9 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            var itemTypeDtos = _itemTypeService.GetAll();
+            var itemTypeDtos = await _itemTypeService.GetAsync();
             return Ok(itemTypeDtos);
         }
     }

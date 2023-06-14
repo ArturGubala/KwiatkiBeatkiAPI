@@ -15,7 +15,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         {
             _usersService = userService;
         }
-        [HttpGet("logged-user")]
+        [HttpGet("sign-in")]
         public async Task<IActionResult> Get()
         {
             UserDto userDto = await _usersService.GetSignInUserAsync();

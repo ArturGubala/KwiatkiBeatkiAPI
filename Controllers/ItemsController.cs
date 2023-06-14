@@ -19,14 +19,14 @@ namespace KwiatkiBeatkiAPI.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var itemDtos = await _itemService.GetAllAsync();
+            var itemDtos = await _itemService.GetAsync();
             return Ok(itemDtos);
         }
 
         [HttpGet("{id:int}")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
-            var itemDto = await _itemService.GetByIdAsync(id);
+            var itemDto = await _itemService.GetAsync(id);
             return Ok(itemDto);
         }
 
@@ -34,7 +34,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         [Authorize(Roles = "Admin,Menager")]
         public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
-            var createdItemId = await _itemService.CreateItemAsync(createUpdateItemDto);
+            var createdItemId = await _itemService.CreateAsync(createUpdateItemDto);
             return Created($"api/v1/items/{createdItemId}", null);
         }
 
@@ -42,7 +42,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         [Authorize(Roles = "Admin,Menager")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
-            await _itemService.DeleteItemAsync(id);
+            await _itemService.DeleteAsync(id);
             return NoContent();
         }
 
@@ -50,7 +50,7 @@ namespace KwiatkiBeatkiAPI.Controllers
         [Authorize(Roles = "Admin,Menager")]
         public async Task<IActionResult> Put([FromRoute]int id, [FromBody]CreateUpdateItemDto createUpdateItemDto) 
         {
-            await _itemService.UpdateItemAsync(id, createUpdateItemDto);
+            await _itemService.UpdateAsync(id, createUpdateItemDto);
             return NoContent();
         }
     }

@@ -11,11 +11,11 @@ namespace KwiatkiBeatkiAPI.Services
 {
     public interface IItemsService
     {
-        Task<IEnumerable<ItemDto>> GetAllAsync();
-        Task<ItemDto> GetByIdAsync(int id);
-        Task<int> CreateItemAsync(CreateUpdateItemDto createUpdateItemDto);
-        Task DeleteItemAsync(int id);
-        Task UpdateItemAsync(int id, CreateUpdateItemDto createUpdateItemDto);
+        Task<IEnumerable<ItemDto>> GetAsync();
+        Task<ItemDto> GetAsync(int id);
+        Task<int> CreateAsync(CreateUpdateItemDto createUpdateItemDto);
+        Task DeleteAsync(int id);
+        Task UpdateAsync(int id, CreateUpdateItemDto createUpdateItemDto);
     }
     public class ItemsService : IItemsService
     {
@@ -29,7 +29,7 @@ namespace KwiatkiBeatkiAPI.Services
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
         }
 
-        public async Task<IEnumerable<ItemDto>> GetAllAsync()
+        public async Task<IEnumerable<ItemDto>> GetAsync()
         {
             var itemEntities = await _kwiatkiBeatkiDbContext.Item
                 .Include(i => i.ItemType)
@@ -45,7 +45,7 @@ namespace KwiatkiBeatkiAPI.Services
             return itemDtos;
         }
 
-        public async Task<ItemDto> GetByIdAsync(int id)
+        public async Task<ItemDto> GetAsync(int id)
         {
             var itemEntity = await _kwiatkiBeatkiDbContext.Item
                 .Include(i => i.ItemType)
@@ -64,7 +64,7 @@ namespace KwiatkiBeatkiAPI.Services
             return itemDto;
         }
 
-        public async Task<int> CreateItemAsync(CreateUpdateItemDto createUpdateItemDto)
+        public async Task<int> CreateAsync(CreateUpdateItemDto createUpdateItemDto)
         {
             var itemEntity = _mapper.Map<ItemEntity>(createUpdateItemDto);
 
@@ -96,7 +96,7 @@ namespace KwiatkiBeatkiAPI.Services
             return itemEntity.Id;
         }
 
-        public async Task DeleteItemAsync(int id)
+        public async Task DeleteAsync(int id)
         {
             var itemToDelete = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 
@@ -107,7 +107,7 @@ namespace KwiatkiBeatkiAPI.Services
             await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
 
-        public async Task UpdateItemAsync(int id, CreateUpdateItemDto createUpdateItemDto)
+        public async Task UpdateAsync(int id, CreateUpdateItemDto createUpdateItemDto)
         {
             var itemToUpdate = await _kwiatkiBeatkiDbContext.Item.FirstOrDefaultAsync(i => i.Id == id);
 

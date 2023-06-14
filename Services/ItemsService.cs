@@ -20,11 +20,9 @@ namespace KwiatkiBeatkiAPI.Services
     public class ItemsService : IItemsService
     {
         private readonly KwiatkiBeatkiDbContext _kwiatkiBeatkiDbContext;
-        private readonly IUserContextService _userContextService;
         private readonly IMapper _mapper;
-        public ItemsService(IUserContextService userContextService, IMapper mapper, KwiatkiBeatkiDbContext kwiatkiBeatkiDbContext)
+        public ItemsService(IMapper mapper, KwiatkiBeatkiDbContext kwiatkiBeatkiDbContext)
         {
-            _userContextService = userContextService;
             _mapper = mapper;
             _kwiatkiBeatkiDbContext = kwiatkiBeatkiDbContext;
         }

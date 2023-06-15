@@ -1,14 +1,11 @@
 ﻿using KwiatkiBeatkiAPI.Models.User;
 using KwiatkiBeatkiAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/users")]
-    [ApiController]
-    [Authorize]
-    public class UsersController : ControllerBase
+    [Route("api/v{version:apiVersion}/users")]
+    public class UsersController : ApiController
     {
         private readonly IUsersService _usersService;
         public UsersController(IUsersService userService)

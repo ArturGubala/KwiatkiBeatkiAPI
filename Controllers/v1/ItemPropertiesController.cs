@@ -3,12 +3,10 @@ using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/items/{itemId:int}/properties")]
-    [ApiController]
-    [Authorize]
-    public class ItemPropertiesController : ControllerBase
+    [Route("api/v{version:apiVersion}/items/{itemId:int}/properties")]
+    public class ItemPropertiesController : ApiController
     {
         private readonly IItemPropertiesService _itemPropertyiesService;
         public ItemPropertiesController(IItemPropertiesService itemPropertyiesService)

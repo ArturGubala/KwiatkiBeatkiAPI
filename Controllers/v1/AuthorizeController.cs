@@ -2,11 +2,11 @@
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/authorize")]
+    [Route("api/v{version:apiVersion}/authorize")]
     [ApiController]
-    public class AuthorizeController : ControllerBase
+    public class AuthorizeController : ApiController
     {
         private readonly ITokenService _tokenService;
         private readonly IAuthService _authService;
@@ -35,7 +35,7 @@ namespace KwiatkiBeatkiAPI.Controllers
 
         [HttpPost]
         [Route("refresh")]
-        public async Task<IActionResult> Post([FromBody]TokenDto tokenDto)
+        public async Task<IActionResult> Post([FromBody] TokenDto tokenDto)
         {
             var userDto = await _authService.CheckTokensAsync(tokenDto);
             var accessToken = _tokenService.GenerateAccessToken(userDto);

@@ -1,14 +1,11 @@
 ﻿using KwiatkiBeatkiAPI.Models.Producer;
 using KwiatkiBeatkiAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/producers")]
-    [ApiController]
-    [Authorize]
-    public class ProducersController : ControllerBase
+    [Route("api/v{version:apiVersion}/producers")]
+    public class ProducersController : ApiController
     {
         private readonly IProducersService _producerService;
         public ProducersController(IProducersService producerService)
@@ -34,7 +31,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         public async Task<IActionResult> Post([FromBody] CreateUpdateProducerDto createUpdateProducerDto)
         {
             var createdProducerId = await _producerService.CreateAsync(createUpdateProducerDto);
-            return Created($"api/v1/producers/{createdProducerId}", null);
+            var createdResourceUrl = Url.Action(nameof(Get), new { id = createdProducerId });
+            return Created(createdResourceUrl!, null);
         }
 
         [HttpDelete("{id:int}")]

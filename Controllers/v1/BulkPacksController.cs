@@ -1,13 +1,10 @@
 ﻿using KwiatkiBeatkiAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/bulk-packs")]
-    [ApiController]
-    [Authorize]
-    public class BulkPacksController : ControllerBase
+    [Route("api/v{version:apiVersion}/bulk-packs")]
+    public class BulkPacksController : ApiController
     {
         private readonly IBulkPacksService _bulkPackService;
         public BulkPacksController(IBulkPacksService bulkPackService)

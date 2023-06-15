@@ -1,13 +1,10 @@
 ﻿using KwiatkiBeatkiAPI.Services;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/measurement-units")]
-    [ApiController]
-    [Authorize]
-    public class MeasurementUnitsController : ControllerBase
+    [Route("api/v{version:apiVersion}/measurement-units")]
+    public class MeasurementUnitsController : ApiController
     {
         private readonly IMeasurementUnitsService _measurementUnitService;
         public MeasurementUnitsController(IMeasurementUnitsService measurementUnitService)

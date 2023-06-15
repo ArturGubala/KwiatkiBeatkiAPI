@@ -76,6 +76,14 @@ try
                 };
             };
         });
+
+    builder.Services.AddApiVersioning(options =>
+    {
+        options.DefaultApiVersion = new ApiVersion(1, 0);
+        options.AssumeDefaultVersionWhenUnspecified = true;
+        options.ReportApiVersions = true;
+    });
+
     builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
     builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
     builder.Services.AddFluentValidationRulesToSwagger();

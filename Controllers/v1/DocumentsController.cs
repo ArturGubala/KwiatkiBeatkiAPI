@@ -1,15 +1,12 @@
 ﻿using KwiatkiBeatkiAPI.Models.Document;
-using KwiatkiBeatkiAPI.Models.Item;
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/documents")]
-    [ApiController]
-    [Authorize]
-    public class DocumentsController : ControllerBase
+    [Route("api/v{version:apiVersion}/documents")]
+    public class DocumentsController : ApiController
     {
         private readonly IDocumentsService _documentsService;
         public DocumentsController(IDocumentsService documentsService)
@@ -25,18 +22,19 @@ namespace KwiatkiBeatkiAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public async Task<IActionResult> Get([FromRoute] int id) 
-        { 
+        public async Task<IActionResult> Get([FromRoute] int id)
+        {
             var documentDto = await _documentsService.GetAsync(id);
             return Ok(documentDto);
         }
-        
+
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
         public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var createdDocumentId = await _documentsService.CreateAsync(createDocumentDto);
-            return Created($"api/v1/documents/{createdDocumentId}", null);
+            var createdResourceUrl = Url.Action(nameof(Get), new { id = createdDocumentId });
+            return Created(createdResourceUrl!, null);
         }
 
         [HttpDelete("{id:int}")]

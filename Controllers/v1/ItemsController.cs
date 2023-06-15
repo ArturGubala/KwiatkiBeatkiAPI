@@ -3,12 +3,10 @@ using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace KwiatkiBeatkiAPI.Controllers
+namespace KwiatkiBeatkiAPI.Controllers.v1
 {
-    [Route("api/v1/items")]
-    [ApiController]
-    [Authorize]
-    public class ItemsController : ControllerBase
+    [Route("api/v{version:apiVersion}/items")]
+    public class ItemsController : ApiController
     {
         private readonly IItemsService _itemService;
         public ItemsController(IItemsService itemsService)
@@ -35,7 +33,8 @@ namespace KwiatkiBeatkiAPI.Controllers
         public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
             var createdItemId = await _itemService.CreateAsync(createUpdateItemDto);
-            return Created($"api/v1/items/{createdItemId}", null);
+            var createdResourceUrl = Url.Action(nameof(Get), new { id = createdItemId });
+            return Created(createdResourceUrl!, null);
         }
 
         [HttpDelete("{id:int}")]
@@ -48,7 +47,7 @@ namespace KwiatkiBeatkiAPI.Controllers
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
-        public async Task<IActionResult> Put([FromRoute]int id, [FromBody]CreateUpdateItemDto createUpdateItemDto) 
+        public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
             await _itemService.UpdateAsync(id, createUpdateItemDto);
             return NoContent();

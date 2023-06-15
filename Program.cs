@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using KwiatkiBeatkiAPI.Models.Response;
 using Microsoft.AspNetCore.Mvc;
 using NLog.Web;
+using KwiatkiBeatkiAPI.Models.Document;
 
 try
 {
@@ -95,6 +96,7 @@ try
     builder.Services.AddTransient<IProducersService, ProducersService>();
     builder.Services.AddTransient<IDocumentsService, DocumentsService>();
     builder.Services.AddTransient<IItemPropertiesService, ItemPropertiesService>();
+    builder.Services.AddTransient<IGenerateFile<GenerateDocumentDto>, GenerateOrderFileService>();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
     builder.Services.AddHttpContextAccessor();

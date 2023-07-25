@@ -5,6 +5,10 @@ using KwiatkiBeatkiAPI.Entities.Line;
 using KwiatkiBeatkiAPI.Models.Document;
 using KwiatkiBeatkiAPI.Exeptions;
 using Microsoft.EntityFrameworkCore;
+using QuestPDF.Fluent;
+using KwiatkiBeatkiAPI.Services.ComposeDocument;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace KwiatkiBeatkiAPI.Services
 {
@@ -15,6 +19,7 @@ namespace KwiatkiBeatkiAPI.Services
         Task<int> CreateAsync(CreateDocumentDto createDocumentDto);
         Task UpdateAsync(int id, UpdateDocumentDto updateDocumentDto);
         Task DeleteAsync(int documentId);
+        Task<byte[]> GenerateDocument(int documentId);
     }
     public class DocumentsService : IDocumentsService
     {
@@ -148,6 +153,31 @@ namespace KwiatkiBeatkiAPI.Services
             var documentTypeAbbreviation = await _kwiatkiBeatkiDbContext.DocumentType.Where(d => d.Id == documentTypeId).Select(d => d.Abbreviation).FirstAsync();
 
             return documentTypeAbbreviation;
+        }
+
+        public async Task<byte[]> GenerateDocument(int documentId)
+        {
+            var documentEntity = await _kwiatkiBeatkiDbContext.Document
+                .Include(i => i.DocumentType)
+                .Include(i => i.WarehouseFrom)
+                .Include(i => i.WarehouseTo)
+                .Include(i => i.TradePartner)
+                .Include(i => i.User)
+                    .ThenInclude(i => i.Role)
+                .Include(i => i.Lines)
+                    .ThenInclude(i => i.Item)
+                        .ThenInclude(i => i.MeasurementUnit)
+                .Include(i => i.Lines)
+                    .ThenInclude(i => i.Item)
+                        .ThenInclude(i => i.ItemProperties)
+                .FirstOrDefaultAsync(d => d.Id == documentId);
+
+            if (documentEntity is null)
+                throw new NotFoundException("DocumentId", $"Document with ID: {documentId} was not found");
+
+            var composeOrder = new ComposeOrder(documentEntity);
+
+            return composeOrder.GeneratePdf();
         }
     }
 }

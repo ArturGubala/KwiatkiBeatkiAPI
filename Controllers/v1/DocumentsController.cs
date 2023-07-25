@@ -28,6 +28,13 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
             return Ok(documentDto);
         }
 
+        [HttpGet("{id:int}/generete-document")]
+        public async Task<IActionResult> GetByte([FromRoute] int id)
+        {
+            var documentByteArray = await _documentsService.GenerateDocument(id);
+            return File(documentByteArray, "application/pdf");
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
         public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)

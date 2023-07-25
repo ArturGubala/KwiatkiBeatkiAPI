@@ -1,11 +1,13 @@
 ﻿using KwiatkiBeatkiAPI.Models.Authorization;
 using KwiatkiBeatkiAPI.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace KwiatkiBeatkiAPI.Controllers.v1
 {
     [Route("api/v{version:apiVersion}/authorize")]
     [ApiController]
+    [AllowAnonymous]
     public class AuthorizeController : ApiController
     {
         private readonly ITokenService _tokenService;

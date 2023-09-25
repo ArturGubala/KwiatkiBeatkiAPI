@@ -11,10 +11,10 @@ namespace KwiatkiBeatkiAPI.MappingProfiles
         public ItemMappingProfile()
         {
             CreateMap<ItemEntity, ItemDto>()
-                .ForMember(m => m.ItemType, c => c.MapFrom(s => s.ItemType.Name))
-                .ForMember(m => m.BulkPack, c => c.MapFrom(s => s.BulkPack.Name))
-                .ForMember(m => m.Producer, c => c.MapFrom(s => s.Producer.Name))
-                .ForMember(m => m.MeasurementUnit, c => c.MapFrom(s => s.MeasurementUnit.Abbreviation))
+                .ForMember(m => m.ItemType, c => c.MapFrom(s => s.ItemType))
+                .ForMember(m => m.BulkPack, c => c.MapFrom(s => s.BulkPack))
+                .ForMember(m => m.Producer, c => c.MapFrom(s => s.Producer))
+                .ForMember(m => m.MeasurementUnit, c => c.MapFrom(s => s.MeasurementUnit))
                 .ForMember(m => m.ItemProperties, c => c.MapFrom(s => s.ItemProperties));
 
             CreateMap<CreateUpdateItemDto, ItemEntity>();

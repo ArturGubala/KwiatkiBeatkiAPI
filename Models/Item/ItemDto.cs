@@ -1,14 +1,18 @@
-﻿using KwiatkiBeatkiAPI.Models.ItemProperty;
+﻿using KwiatkiBeatkiAPI.Models.BulkPack;
+using KwiatkiBeatkiAPI.Models.ItemProperty;
+using KwiatkiBeatkiAPI.Models.ItemType;
+using KwiatkiBeatkiAPI.Models.MeasurementUnit;
+using KwiatkiBeatkiAPI.Models.Producer;
 
 namespace KwiatkiBeatkiAPI.Models.Item
 {
     public class ItemDto
     {
         public int Id { get; set; }
-        public string ItemType{ get; set; }
-        public string? BulkPack { get; set; }
-        public string? Producer { get; set; }
-        public string MeasurementUnit { get; set; }
+        public ItemTypeDto ItemType{ get; set; }
+        public BulkPackDto? BulkPack { get; set; }
+        public ProducerDto? Producer { get; set; }
+        public MeasurementUnitDto MeasurementUnit { get; set; }
         public string StockCode { get; set; }
         public string? Name { get; set; }
         public string? Alias { get; set; }

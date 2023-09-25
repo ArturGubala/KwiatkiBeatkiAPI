@@ -2,6 +2,7 @@
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace KwiatkiBeatkiAPI.Controllers.v1
 {
@@ -15,6 +16,8 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ItemDto>), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Get()
         {
             var itemDtos = await _itemService.GetAsync();
@@ -22,6 +25,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(ItemDto), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             var itemDto = await _itemService.GetAsync(id);
@@ -30,6 +36,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status201Created)]
+        [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Unprocessable entity")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
             var createdItemId = await _itemService.CreateAsync(createUpdateItemDto);
@@ -39,6 +48,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await _itemService.DeleteAsync(id);
@@ -47,6 +59,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CreateUpdateItemDto createUpdateItemDto)
         {
             await _itemService.UpdateAsync(id, createUpdateItemDto);

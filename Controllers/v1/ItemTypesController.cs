@@ -1,5 +1,7 @@
-﻿using KwiatkiBeatkiAPI.Services;
+﻿using KwiatkiBeatkiAPI.Models.ItemType;
+using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace KwiatkiBeatkiAPI.Controllers.v1
 {
@@ -13,6 +15,8 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<ItemTypeDto>), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Get()
         {
             var itemTypeDtos = await _itemTypeService.GetAsync();

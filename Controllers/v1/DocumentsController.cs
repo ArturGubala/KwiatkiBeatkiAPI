@@ -2,6 +2,7 @@
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace KwiatkiBeatkiAPI.Controllers.v1
 {
@@ -15,6 +16,8 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<DocumentDto>), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Get()
         {
             var documentDtos = await _documentsService.GetAsync();
@@ -22,6 +25,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet("{id:int}")]
+        [ProducesResponseType(typeof(DocumentDto), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Get([FromRoute] int id)
         {
             var documentDto = await _documentsService.GetAsync(id);
@@ -29,6 +35,7 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpGet("{id:int}/generete-document")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
         public async Task<IActionResult> GetByte([FromRoute] int id)
         {
             var documentByteArray = await _documentsService.GenerateDocument(id);
@@ -37,6 +44,10 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status201Created)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request")]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Post([FromBody] CreateDocumentDto createDocumentDto)
         {
             var createdDocumentId = await _documentsService.CreateAsync(createDocumentDto);
@@ -46,6 +57,10 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             await _documentsService.DeleteAsync(id);
@@ -54,6 +69,10 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
+        [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
+        [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] UpdateDocumentDto updateDocumentDto)
         {
             await _documentsService.UpdateAsync(id, updateDocumentDto);

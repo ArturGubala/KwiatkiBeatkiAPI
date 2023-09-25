@@ -1,7 +1,9 @@
 ﻿using KwiatkiBeatkiAPI.Models.Authorization;
+using KwiatkiBeatkiAPI.Models.User;
 using KwiatkiBeatkiAPI.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace KwiatkiBeatkiAPI.Controllers.v1
 {
@@ -20,6 +22,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         }
 
         [HttpPost("login")]
+        [ProducesResponseType(typeof(IEnumerable<UserDto>), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Post([FromBody] AuthDto authDto)
         {
             var userDto = await _authService.LoginAsync(authDto);
@@ -37,6 +42,9 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
 
         [HttpPost]
         [Route("refresh")]
+        [ProducesResponseType(typeof(IEnumerable<TokenDto>), (int)StatusCodes.Status200OK)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, "Bad request")]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Post([FromBody] TokenDto tokenDto)
         {
             var userDto = await _authService.CheckTokensAsync(tokenDto);

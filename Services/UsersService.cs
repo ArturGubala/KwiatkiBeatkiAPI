@@ -23,6 +23,7 @@ namespace KwiatkiBeatkiAPI.Services
             _mapper = mapper;
             _userContextService = userContextService;
         }
+
         public async Task<UserDto> GetSignInUserAsync()
         {
             int loggedUserId = int.Parse(_userContextService.User.FindFirst(c => c.Type == ClaimTypes.NameIdentifier)!.Value);

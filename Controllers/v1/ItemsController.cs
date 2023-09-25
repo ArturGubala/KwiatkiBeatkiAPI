@@ -37,6 +37,7 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         [HttpPost]
         [Authorize(Roles = "Admin,Menager")]
         [SwaggerResponse(StatusCodes.Status201Created)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
         [SwaggerResponse(StatusCodes.Status422UnprocessableEntity, "Unprocessable entity")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Post([FromBody] CreateUpdateItemDto createUpdateItemDto)
@@ -49,6 +50,7 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         [HttpDelete("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Delete([FromRoute] int id)
@@ -60,6 +62,7 @@ namespace KwiatkiBeatkiAPI.Controllers.v1
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Admin,Menager")]
         [SwaggerResponse(StatusCodes.Status204NoContent)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, "Forbidden")]
         [SwaggerResponse(StatusCodes.Status404NotFound, "Resource not found")]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, "Internal server error")]
         public async Task<IActionResult> Put([FromRoute] int id, [FromBody] CreateUpdateItemDto createUpdateItemDto)

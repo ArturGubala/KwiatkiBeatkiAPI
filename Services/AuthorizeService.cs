@@ -77,7 +77,7 @@ namespace KwiatkiBeatkiAPI.Services
             user.RefreshToken = tokenDto.RefreshToken;
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
 
-            _kwiatkiBeatkiDbContext.SaveChanges();
+           await _kwiatkiBeatkiDbContext.SaveChangesAsync();
         }
 
 

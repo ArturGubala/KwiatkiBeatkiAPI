@@ -90,11 +90,11 @@ namespace KwiatkiBeatkiAPI.Services
 
                 await _kwiatkiBeatkiDbContext.Line.AddRangeAsync(lineEntities);
                 await _kwiatkiBeatkiDbContext.SaveChangesAsync();
-                await _kwiatkiBeatkiDbContext.Database.BeginTransactionAsync();
+                await _kwiatkiBeatkiDbContext.Database.CommitTransactionAsync();
             }
             catch (Exception ex)
             {
-                await _kwiatkiBeatkiDbContext.Database.BeginTransactionAsync();
+                await _kwiatkiBeatkiDbContext.Database.RollbackTransactionAsync();
                 throw new BadRequestException("Document", "Error while adding document", ex);
             }
 

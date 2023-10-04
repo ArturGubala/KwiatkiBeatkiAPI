@@ -105,6 +105,7 @@ try
     builder.Services.AddTransient<IProducersService, ProducersService>();
     builder.Services.AddTransient<IDocumentsService, DocumentsService>();
     builder.Services.AddTransient<IItemPropertiesService, ItemPropertiesService>();
+    builder.Services.AddTransient<IDocumentTypeService, DocumentTypeService>();
 
     builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
     builder.Services.AddHttpContextAccessor();

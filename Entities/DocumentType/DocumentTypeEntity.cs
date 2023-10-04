@@ -1,5 +1,4 @@
-﻿using KwiatkiBeatkiAPI.Controllers;
-using KwiatkiBeatkiAPI.Entities.Document;
+﻿using KwiatkiBeatkiAPI.Entities.Document;
 
 namespace KwiatkiBeatkiAPI.Entities.DocumentType
 {
